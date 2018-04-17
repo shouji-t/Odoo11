@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="ss_dumy_1" model="ss.dumy">
+            <field name="code">A001</field>
+            <field name="name">MSD</field>
+        </record>
+
+        <record id="ss_dumy_2" model="ss.dumy">
+            <field name="code">A002</field>
+            <field name="name">Suli</field>
+        </record>
+
+    </data>
+</odoo>

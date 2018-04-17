@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- MSD Menu -->
+        <menuitem id="menu_msd_root" name="MSD"
+            sequence="1"
+            web_icon="ssm,static/description/icon.png" />
+
+    </data>
+</odoo>

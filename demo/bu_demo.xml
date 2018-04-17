@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="ss_bu_1" model="ss.bu">
+            <field name="bu_id">5120</field>
+            <field name="name">ネットワークサービスBU</field>
+        </record>
+
+        <record id="ss_bu_2" model="ss.bu">
+            <field name="bu_id">5130</field>
+            <field name="name">システムサービスBU</field>
+        </record>
+
+        <record id="ss_bu_3" model="ss.bu">
+            <field name="bu_id">5140</field>
+            <field name="name">ソリューションサービスBU</field>
+        </record>
+
+        <record id="ss_bu_4" model="ss.bu">
+            <field name="bu_id">5150</field>
+            <field name="name">カスタマーサービスBU</field>
+        </record>
+
+        <record id="ss_bu_2" model="ss.bu">
+            <field name="bu_id">5160</field>
+            <field name="name">テクノロジーサポートBU</field>
+        </record>
+
+    </data>
+</odoo>

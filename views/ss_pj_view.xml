@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_ss_pj_tree" model="ir.ui.view">
+            <field name="name">ss.pj.tree</field>
+            <field name="model">ss.pj</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="ss_pj">
+                    <field name="name" />
+                    <field name="pj_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_ss_pj_form" model="ir.ui.view">
+            <field name="name">ss.pj.form</field>
+            <field name="model">ss.pj</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="ss_pj">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="PJ Name" required="True"/>
+                            </h1>
+                            <label for="pj_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="pj_id" placeholder="PJ Name" required="True"/>
+                            </h1>
+                        </div>
+                        <group string="PJ" name="subject" col="3">
+                            <group name="group_company" colspan="3">
+                                <field name="company_id" />
+                            </group>
+                            <group colspan="3">
+                                <group name="group_partner">
+                                    <field name="partner_id" />
+                                    <field name="type" style="width:30%%"/>
+                                </group>
+                                <group name="employee" colspan="1">
+                                    <field name="employee_id" />
+                                    <field name="employee_type" />
+                                </group>
+                            </group>
+                            <group name="group_price_unit">
+                                <field name="price_unit" />
+                                <field name="price_purchase" />
+                            </group>
+                            <group name="group_duty">
+                                <field name="duty_lowerlimit" />
+                                <field name="duty_upperlimit" />
+                            </group>
+                            <group name="group_price_limit">
+                                <field name="price_base" />
+                                <field name="price_upperlimit" />
+                            </group>
+                        </group>
+
+                        <!--ss_pj.detailのフィールドを追加する-->
+                        <separator string="詳細" colspan="3"/>
+
+                        <group name="details" col="2">
+                            <group>
+                                <field name="pj_sub_id"/>
+                            </group>
+                            <group/>
+                            <group name="hours">
+                                <field name="manhour" />
+                                <field name="hours" />
+                            </group>
+                            <group name="hours_limit">
+                                <field name="hours_lowerlimit" />
+                                <field name="hours_upperlimit" />
+                            </group>
+                            <group>
+                                <field name="payoffhour" />
+                                <field name="carfare" />
+                            </group>
+                            <group name="amount">
+                                <field name="amount" />
+                                <field name="subtotal"/>
+                                <field name="amount_total" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_ss_pj_search" model="ir.ui.view">
+            <field name="name">ss.pj.search</field>
+            <field name="model">ss.pj</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="PJ">
+                    <field name="name" />
+                    <field name="pj_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Evaluation Type" domain="[]"
+                            context="{'group_by':'evaluation_type'}" />
+                        <filter string="pj" domain="[]"
+                            context="{'group_by':'pj_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_ss_pj_view">
+            <field name="name">ss pj</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.pj</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_pj_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_pj_view_form">
+            <field name="act_window_id" ref="act_ss_pj_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_pj_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_pj_view_tree">
+            <field name="act_window_id" ref="act_ss_pj_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_pj_tree" />
+        </record>
+    </data>
+</odoo>

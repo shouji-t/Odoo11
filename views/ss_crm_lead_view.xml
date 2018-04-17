@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ss_view_crm_lead_form" model="ir.ui.view">
+        <field name="name">ss.crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group" position="after">
+                <group >
+                    <field name="x_location" />
+                    <field name="x_status" />
+                    <field name="x_period" />
+                    <field name="x_skill" />
+                </group>
+                <group >
+                    <field name="x_member" />
+                    <field name="x_saleprice" />
+                    <field name="x_purchaseprice" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
