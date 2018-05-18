@@ -26,6 +26,7 @@
         'views/ss_hr_employee_view.xml',
         'views/ss_crm_lead_view.xml',
         'views/ss_pj_view.xml',
+        'views/ss_budget_view.xml',
         'menu/ss_menu.xml',
     ],
     'demo': [

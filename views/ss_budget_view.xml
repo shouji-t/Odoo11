@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Tree view -->
+        <record id="view_ss_budget_tree" model="ir.ui.view">
+            <field name="name">ss.budget.tree</field>
+            <field name="model">ss.budget</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="ss_budget">
+                    <field name="name" />
+                    <field name="bu_id" />
+                </tree>
+            </field>
+        </record>
+        
+
+        <!-- Form View -->
+        <record id="view_ss_budget_form" model="ir.ui.view">
+            <field name="name">ss.budget.form</field>
+            <field name="model">ss.budget</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="ss_budget">
+                    <sheet>
+                        <div class="row">
+                            <div class="col-sm-4"> 
+                                <div class="row">
+                                    <div class="col-sm-4"><label for="budget_year"/></div>
+                                    <div class="col-sm-4"><field name="budget_year" placeholder="YYYY" required="True" class="oe_inline"/></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4"/>
+                            <div class="col-sm-4">
+                                <label for="status" />
+                                <field name="status" placeholder="承認" readonly="True" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4"><label for="bu_id" /></div>
+                                    <div class="col-sm-8"><field name="bu_id" placeholder="bu_id"/></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <label for="bu_name"/><field name="bu_name" readonly="True"/>
+                            </div>
+                        </div>
+                        <group col="4">
+                            <group colspan="2">
+                                <field name="budget_earnings"/>
+                                <field name="budget_profits"/>
+                                <field name="budget_expenses"/>
+                            </group>
+                            <group colspan="2">
+                                <field name="achieve_earnings"/>
+                                <field name="achieve_profits"/>
+                                <field name="achieve_expenses"/>
+                            </group>
+                        </group>
+
+                        <hr size="30"/>
+
+                        <group col="4">
+                             <group colspan="2">
+                                <field name="budget_earning4"/>
+                                <field name="budget_earning5"/>
+                                <field name="budget_earning6"/>
+                                <field name="budget_earning7"/>
+                                <field name="budget_earning8"/>
+                                <field name="budget_earning9"/>
+                                <field name="budget_earning10"/>
+                                <field name="budget_earning11"/>
+                                <field name="budget_earning12"/>
+                                <field name="budget_earning1"/>
+                                <field name="budget_earning2"/>
+                                <field name="budget_earning3"/>
+                            </group>
+                            <group colspan="2">
+                                <field name="budget_profit4"/>
+                                <field name="budget_profit5"/>
+                                <field name="budget_profit6"/>
+                                <field name="budget_profit7"/>
+                                <field name="budget_profit8"/>
+                                <field name="budget_profit9"/>
+                                <field name="budget_profit10"/>
+                                <field name="budget_profit11"/>
+                                <field name="budget_profit12"/>
+                                <field name="budget_profit1"/>
+                                <field name="budget_profit2"/>
+                                <field name="budget_profit3"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_ss_budget_search" model="ir.ui.view">
+            <field name="name">ss.budget.search</field>
+            <field name="model">ss.budget</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="bu">
+                    <field name="name" />
+                    <field name="bu_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Evaluation Type" domain="[]"
+                            context="{'group_by':'evaluation_type'}" />
+                        <filter string="bu" domain="[]"
+                            context="{'group_by':'bu_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record model="ir.actions.act_window" id="act_ss_budget_view">
+            <field name="name">ss budget</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_budget_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_budget_view_form">
+            <field name="act_window_id" ref="act_ss_budget_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_budget_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_budget_view_tree">
+            <field name="act_window_id" ref="act_ss_budget_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_budget_tree" />
+        </record>
+    </data>
+</odoo>

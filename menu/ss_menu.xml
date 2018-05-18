@@ -92,7 +92,7 @@
             parent="menu_msd_root" sequence="70"/>
         <menuitem id="menu_msd_sales_71" name="予算登録"
             parent="menu_msd_70" sequence="71"
-            action="act_ss_dumy_view"
+            action="act_ss_budget_view"
             groups="base.group_user" />
 
         <!-- MSD Menu 実績-->

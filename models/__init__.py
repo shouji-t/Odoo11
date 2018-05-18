@@ -12,4 +12,6 @@ from . import ss_res_partner
 from . import ss_hr_department
 from . import ss_hr_employee
 from . import ss_pj
+from . import ss_bu
+from . import ss_budget
 

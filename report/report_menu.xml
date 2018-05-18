@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+            id="action_report_ss_order"
+            model="ss.order"
+            string="発注書"
+            report_type="qweb-pdf"
+            name="msd_ssm.report_ss_order"
+            file="msd_ssm.report_ss_order"
+        />
+    </data>
+</odoo>

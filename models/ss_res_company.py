@@ -9,11 +9,9 @@
 
 from odoo import models, fields, api
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
-
-    x_partner_cd = fields.Char('顧客コード')
+class ResCompany(models.Model):
+    _inherit = "res.company"
 
     #SsPj class Many2one - David Tang
     #１対多項目のため、目的モデルで正反対の多対１関係を実装する
-    pj_ids = fields.One2many('ss.pj', 'partner_id', 'Pj')
+    pj_ids = fields.One2many('ss.pj', 'company_id', 'Pj')
