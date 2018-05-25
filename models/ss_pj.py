@@ -11,15 +11,23 @@ from odoo import models, fields, api
 
 class SsPj(models.Model):
     _name = 'ss.pj'
+    _order = 'pj_id'
 
-    pj_id = fields.Char('pj_id', required=True)
-    name = fields.Char('Name', required=True)
+
+    pj_id = fields.Char('PJコード', size=12,  required=True)
+    name = fields.Char('PJ名', required=True)
     account_pj_date = fields.Char('経理年月', required=True)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, readonly = True,
         default=lambda self: self.env.user.company_id.id)
 
-    partner_id = fields.Many2one('res.partner', 'Partner')
+    # 顧客
+    partner_id = fields.Many2one('res.partner', '取引先コード')
+    partner_name = fields.Char('取引先名')
     type = fields.Selection([('contract', u'請負'), ('dispatch', u'派遣')], u'種別')
+
+    # BU
+    x_department_cd = fields.Many2one('hr.department', 'BUコード')
+    bu_name = fields.Char('BU名')
 
     # PJ管理
     pj_startdate = fields.Date('PJ開始日',default=fields.Date.context_today, required=True)
@@ -27,7 +35,7 @@ class SsPj(models.Model):
 
     # 追加フィールド
     status = fields.Selection([('order', u'見積'), ('inprogress', u'進行中'), ('end', u'終了'), ('cancel', u'中止')], u'状態')
-    sales_amount = fields.Char('売上金額')
+    sales_amount = fields.Char('売上金額合計')
 
     pj_sub_ids = fields.One2many('ss.pj.detail', 'pj_sub_id', 'PjDetail')
 

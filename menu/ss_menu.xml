@@ -3,7 +3,7 @@
     <data>
         <!-- MSD Menu -->
         <menuitem id="menu_msd_root" name="MSD"
-            sequence="1"
+            sequence="0"
             web_icon="ssm,static/description/icon.png" />
 
         <!-- MSD Menu ダッシュボード-->

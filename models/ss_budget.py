@@ -8,9 +8,35 @@
 ###############################################################################
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class SsBudget(models.Model):
     _name = 'ss.budget'
+
+    @api.depends('budget_earning1', 'budget_earning2', 'budget_earning3', 'budget_earning4',
+                 'budget_earning5', 'budget_earning6', 'budget_earning7', 'budget_earning8',
+                 'budget_earning9', 'budget_earning10', 'budget_earning11', 'budget_earning12'
+                 )
+    def _compute_amount(self):
+        """
+        売上予算合計計算
+        """
+        for budget in self:
+            budget_earning = 0
+            budget_earning = budget.budget_earning1 + budget.budget_earning2 + budget.budget_earning3 + budget.budget_earning4
+            budget_earning += budget.budget_earning5 + budget.budget_earning6 + budget.budget_earning7 + budget.budget_earning8
+            budget_earning += budget.budget_earning9 + budget.budget_earning10 + budget.budget_earning11 + budget.budget_earning12
+            budget.update({
+                'budget_earnings': budget_earning,
+            })
+
+    @api.multi
+    @api.constrains('budget_year')
+    def _check_budget_year(self):
+        for record in self:
+            if record.budget_year < '2010' or record.budget_year > '2030':
+                raise ValidationError(_(
+                    "予算年度を正確に入力してください!"))
 
     bu_id = fields.Many2one('ss.bu', 'bu_id', required=True)
 
@@ -23,7 +49,7 @@ class SsBudget(models.Model):
     budget_year = fields.Char('予算年度', required=True)
     status = fields.Char('状態')
 
-    budget_earnings = fields.Integer('予算_売上合計')
+    budget_earnings = fields.Monetary(compute='_compute_amount', string='予算_売上合計', readonly=True, store=True)
     budget_profits = fields.Integer('予算_粗利合計')
     achieve_earnings = fields.Integer('実績_売上合計')
     achieve_profits = fields.Integer('実績_粗利合計')
