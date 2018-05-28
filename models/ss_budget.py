@@ -34,7 +34,7 @@ class SsBudget(models.Model):
     @api.constrains('budget_year')
     def _check_budget_year(self):
         for record in self:
-            if record.budget_year < '2010' or record.budget_year > '2030':
+            if record.budget_year < '2000' or record.budget_year > '2050':
                 raise ValidationError(_(
                     "予算年度を正確に入力してください!"))
 
