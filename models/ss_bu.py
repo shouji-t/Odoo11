@@ -12,8 +12,8 @@ from odoo import models, fields, api
 class SsBu(models.Model):
     _name = 'ss.bu'
 
-    bu_id = fields.Char('bu_id')
-    name = fields.Char('Name')
+    bu_id = fields.Char('部署ID')
+    name = fields.Char('部署名称')
 
     #Ssbudget class Many2one - David Tang
     #１対多項目のため、目的モデルで正反対の多対１関係を実装する

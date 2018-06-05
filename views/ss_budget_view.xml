@@ -8,8 +8,12 @@
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
                 <tree string="ss_budget">
-                    <field name="name" />
-                    <field name="bu_id" />
+                    <field name="budget_year"/>
+                    <field name="department" />
+                    <field name="department_name"/>
+                    <field name="budget_earnings" />
+                    <field name="budget_profits"/>
+                    <field name="budget_expenses"/>
                 </tree>
             </field>
         </record>
@@ -27,7 +31,7 @@
                             <div class="col-sm-4"> 
                                 <div class="row">
                                     <div class="col-sm-4"><label for="budget_year"/></div>
-                                    <div class="col-sm-4"><field name="budget_year" placeholder="YYYY" required="True" class="oe_inline"/></div>
+                                    <div class="col-sm-4"><field name="budget_year" required="True" class="oe_inline" placeholder="年度"/></div>
                                 </div>
                             </div>
                             <div class="col-sm-4"/>
@@ -39,19 +43,19 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="row">
-                                    <div class="col-sm-4"><label for="bu_id" /></div>
-                                    <div class="col-sm-8"><field name="bu_id" placeholder="bu_id"/></div>
+                                    <div class="col-sm-5"><label for="department" /></div>
+                                    <div class="col-sm-7"><field name="department" placeholder="コード"/></div>
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <label for="bu_name"/><field name="bu_name" readonly="True"/>
+                                <label for="department_name"/><field name="department_name" readonly="True"/>
                             </div>
                         </div>
-                        <group col="4">
-                            <group colspan="2">
+                        <group col="4" style="text-align:right;">
+                            <group colspan="2" >
                                 <field name="budget_earnings"/>
                                 <field name="budget_profits"/>
-                                <field name="budget_expenses"/>
+                                <field name="budget_expenses" />
                             </group>
                             <group colspan="2">
                                 <field name="achieve_earnings"/>
@@ -62,34 +66,34 @@
 
                         <hr size="30"/>
 
-                        <group col="4">
-                             <group colspan="2">
-                                <field name="budget_earning4"/>
-                                <field name="budget_earning5"/>
-                                <field name="budget_earning6"/>
-                                <field name="budget_earning7"/>
-                                <field name="budget_earning8"/>
-                                <field name="budget_earning9"/>
-                                <field name="budget_earning10"/>
-                                <field name="budget_earning11"/>
-                                <field name="budget_earning12"/>
-                                <field name="budget_earning1"/>
-                                <field name="budget_earning2"/>
-                                <field name="budget_earning3"/>
+                        <group col="4" style="text-align:right;">
+                             <group colspan="2" >
+                                <field name="budget_earning4" />
+                                <field name="budget_earning5" />
+                                <field name="budget_earning6" />
+                                <field name="budget_earning7" />
+                                <field name="budget_earning8" />
+                                <field name="budget_earning9" />
+                                <field name="budget_earning10" />
+                                <field name="budget_earning11" />
+                                <field name="budget_earning12" />
+                                <field name="budget_earning1" />
+                                <field name="budget_earning2" />
+                                <field name="budget_earning3" />
                             </group>
                             <group colspan="2">
-                                <field name="budget_profit4"/>
-                                <field name="budget_profit5"/>
-                                <field name="budget_profit6"/>
-                                <field name="budget_profit7"/>
-                                <field name="budget_profit8"/>
-                                <field name="budget_profit9"/>
-                                <field name="budget_profit10"/>
-                                <field name="budget_profit11"/>
-                                <field name="budget_profit12"/>
-                                <field name="budget_profit1"/>
-                                <field name="budget_profit2"/>
-                                <field name="budget_profit3"/>
+                                <field name="budget_profit4" />
+                                <field name="budget_profit5" />
+                                <field name="budget_profit6" />
+                                <field name="budget_profit7" />
+                                <field name="budget_profit8" />
+                                <field name="budget_profit9" />
+                                <field name="budget_profit10" />
+                                <field name="budget_profit11" />
+                                <field name="budget_profit12" />
+                                <field name="budget_profit1" />
+                                <field name="budget_profit2" />
+                                <field name="budget_profit3" />
                             </group>
                         </group>
                     </sheet>
@@ -103,15 +107,15 @@
             <field name="model">ss.budget</field>
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
-                <search string="bu">
+                <search string="部門コード">
                     <field name="name" />
-                    <field name="bu_id" />
+                    <field name="department" />
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter string="Evaluation Type" domain="[]"
                             context="{'group_by':'evaluation_type'}" />
-                        <filter string="bu" domain="[]"
-                            context="{'group_by':'bu_id'}" />
+                        <filter string="部門コード" domain="[]"
+                            context="{'group_by':'department'}" />
                     </group>
                 </search>
             </field>
@@ -119,7 +123,7 @@
 
         <!-- Actions -->
         <record model="ir.actions.act_window" id="act_ss_budget_view">
-            <field name="name">ss budget</field>
+            <field name="name">予算登録</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ss.budget</field>
             <field name="view_type">form</field>

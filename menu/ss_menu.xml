@@ -7,8 +7,9 @@
             web_icon="ssm,static/description/icon.png" />
 
         <!-- MSD Menu ダッシュボード-->
-        <menuitem id="menu_msd_dashboard" name="Dashboard"
-            parent="menu_msd_root" sequence="10"
+        <menuitem id="menu_msd_dashboard" name="ダッシュボード"
+            parent="menu_msd_root" sequence="1"
+            action="board.open_board_my_dash_action"
             groups="base.group_user" />
 
         <!-- MSD Menu 社内申請-->
@@ -16,7 +17,7 @@
             parent="menu_msd_root" sequence="10"/>
         <menuitem id="menu_msd_reg_new" name="新規取引先登録"
             parent="menu_msd_reg" sequence="11"
-            action="act_ss_dumy_view"
+            action="ss_action_partner_form"
             groups="base.group_user" />
         <menuitem id="menu_msd_reg_new2" name="経費申請"
             parent="menu_msd_reg" sequence="12"
@@ -36,15 +37,15 @@
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_23" name="活動"
             parent="menu_msd_sales" sequence="23"
-            action="act_ss_dumy_view"
+            action="crm.crm_activity_report_action"
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_24" name="見積"
             parent="menu_msd_sales" sequence="24"
-            action="act_ss_dumy_view"
+            action="sale.action_quotations"
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_25" name="受注"
             parent="menu_msd_sales" sequence="25"
-            action="act_ss_dumy_view"
+            action="sale.action_orders"
             groups="base.group_user" />
 
         <!-- MSD Menu 購買-->
@@ -52,15 +53,15 @@
             parent="menu_msd_root" sequence="30"/>
         <menuitem id="menu_msd_sales_31" name="仕入先"
             parent="menu_msd_purchase" sequence="31"
-            action="act_ss_dumy_view"
+            action="base.action_partner_supplier_form"
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_32" name="見積"
             parent="menu_msd_purchase" sequence="32"
-            action="act_ss_dumy_view"
+            action="purchase.purchase_rfq"
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_33" name="発注"
             parent="menu_msd_purchase" sequence="33"
-            action="act_ss_dumy_view"
+            action="purchase.purchase_form_action"
             groups="base.group_user" />
 
         <!-- MSD Menu PJ管理-->
@@ -88,10 +89,10 @@
             groups="base.group_user" />
 
         <!-- MSD Menu 予算-->
-        <menuitem id="menu_msd_70" name="予算"
+        <menuitem id="menu_msd_budget" name="予算"
             parent="menu_msd_root" sequence="70"/>
-        <menuitem id="menu_msd_sales_71" name="予算登録"
-            parent="menu_msd_70" sequence="71"
+        <menuitem id="menu_msd_budget_71" name="予算登録"
+            parent="menu_msd_budget" sequence="71"
             action="act_ss_budget_view"
             groups="base.group_user" />
 
@@ -103,40 +104,47 @@
             action="act_ss_dumy_view"
             groups="base.group_user" />
 
-        <!-- MSD Menu 社内連絡-->
-        <menuitem id="menu_msd_90" name="社内連絡"
+        <!-- MSD Menu 社内掲示板-->
+        <menuitem id="menu_msd_blog" name="社内掲示板"
             parent="menu_msd_root" sequence="90"
-            action="act_ss_dumy_view"
+            action="mail.mail_channel_action_client_chat"
             groups="base.group_user" />
 
         <!-- MSD Menu レポート-->
-        <menuitem id="menu_msd_100" name="レポート"
+        <menuitem id="menu_msd_report" name="レポーティング"
             parent="menu_msd_root" sequence="100"/>
-        <menuitem id="menu_msd_sales_101" name="100"
-            parent="menu_msd_100" sequence="101"
-            action="act_ss_dumy_view"
+        <menuitem id="menu_msd_sales_rep_sales" name="販売"
+            parent="menu_msd_report" sequence="101"
+            action="sale.action_order_report_all"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_rep_tunnel" name="販売チャンネル"
+            parent="menu_msd_report" sequence="102"
+            action="sales_team.crm_team_salesteams_act"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_rep_alltunnel" name="全チャンネルの販売"
+            parent="menu_msd_report" sequence="103"
+            action="sale.report_all_channels_sales_action"
             groups="base.group_user" />
 
         <!-- MSD Menu 設定-->
-        <menuitem id="menu_msd_110" name="設定"
+        <menuitem id="menu_msd_setting" name="設定"
             parent="menu_msd_root" sequence="110"/>
-        <menuitem id="menu_msd_sales_111" name="販売チーム"
-            parent="menu_msd_110" sequence="111"
+        <menuitem id="menu_msd_sales_team_config" name="販売チーム"
+            parent="menu_msd_setting" sequence="111"
+            action="sales_team.sales_team_config_action"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_bu" name="BU"
+            parent="menu_msd_setting" sequence="112"
+            action="hr.open_module_tree_department"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_113" name="PJ"
+            parent="menu_msd_setting" sequence="113"
             action="act_ss_dumy_view"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_111" name="BU"
-            parent="menu_msd_110" sequence="111"
-            action="act_ss_dumy_view"
+        <menuitem id="menu_msd_sales_114" name="要員"
+            parent="menu_msd_setting" sequence="114"
+            action="hr.open_view_employee_list_my"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_112" name="PJ"
-            parent="menu_msd_110" sequence="112"
-            action="act_ss_dumy_view"
-            groups="base.group_user" />
-        <menuitem id="menu_msd_sales_113" name="要員"
-            parent="menu_msd_110" sequence="113"
-            action="act_ss_dumy_view"
-            groups="base.group_user" />
-
 
     </data>
 </odoo>

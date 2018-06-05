@@ -17,8 +17,6 @@ class SsEmployee(models.Model):
 
     # x_department_cd = fields.Char('部門コード')
     # hr.departmentのx_department_cdフィールドを取るため
-    #x_department_cd = fields.Char('部門コード', related='department_id.x_department_cd')
-    x_department_cd = fields.Char('部門コード', size = 4)
+    x_department_cd = fields.Char('部門コード', related='department_id.x_department_cd')
 
     x_kinmu_kubun = fields.Many2one('ss.kubun', '勤務区分')
-

@@ -8,51 +8,34 @@
 ###############################################################################
 
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from datetime import datetime
 
 class SsBudget(models.Model):
     _name = 'ss.budget'
+    _rec_name = 'budget_year'
 
-    @api.depends('budget_earning1', 'budget_earning2', 'budget_earning3', 'budget_earning4',
-                 'budget_earning5', 'budget_earning6', 'budget_earning7', 'budget_earning8',
-                 'budget_earning9', 'budget_earning10', 'budget_earning11', 'budget_earning12'
-                 )
-    def _compute_amount(self):
-        """
-        売上予算合計計算
-        """
-        for budget in self:
-            budget_earning = 0
-            budget_earning = budget.budget_earning1 + budget.budget_earning2 + budget.budget_earning3 + budget.budget_earning4
-            budget_earning += budget.budget_earning5 + budget.budget_earning6 + budget.budget_earning7 + budget.budget_earning8
-            budget_earning += budget.budget_earning9 + budget.budget_earning10 + budget.budget_earning11 + budget.budget_earning12
-            budget.update({
-                'budget_earnings': budget_earning,
-            })
-
-    @api.multi
-    @api.constrains('budget_year')
-    def _check_budget_year(self):
-        for record in self:
-            if record.budget_year < '2000' or record.budget_year > '2050':
-                raise ValidationError(_(
-                    "予算年度を正確に入力してください!"))
-
-    bu_id = fields.Many2one('ss.bu', 'bu_id', required=True)
+    # bu_id = fields.Many2one('ss.bu', '部署ID', required=True)
+    department = fields.Many2one('hr.department', '部門コード')
+    department_name = fields.Char('部門名', related='department.name')
 
     # Bu名称を取る
-    bu_name = fields.Char(related="bu_id.name", string="BU名称")
+    # bu_name = fields.Char(related="bu_id.name", string="部署名称")
 
     name = fields.Char('Name')
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, readonly = True,
         default=lambda self: self.env.user.company_id.id)
-    budget_year = fields.Char('予算年度', required=True)
+    # 予算年度リストを表示する
+    budget_year = fields.Selection([
+                (num, str(num)) for num in 
+                range( ((datetime.now().year)-3), ((datetime.now().year)+10)) ], 
+                '予算年度', default=datetime.now().year)
+
     status = fields.Char('状態')
 
-    budget_earnings = fields.Monetary(compute='_compute_amount', string='予算_売上合計', readonly=True, store=True)
-    budget_profits = fields.Integer('予算_粗利合計')
-    achieve_earnings = fields.Integer('実績_売上合計')
-    achieve_profits = fields.Integer('実績_粗利合計')
+    # budget_earnings = fields.Integer('予算_売上合計')
+    # budget_profits = fields.Integer('予算_粗利合計')
+    # achieve_earnings = fields.Integer('実績_売上合計')
+    # achieve_profits = fields.Integer('実績_粗利合計')
 
     budget_earning1 = fields.Integer('予算_売上1月')
     budget_profit1 = fields.Integer('予算_粗利1月')
@@ -104,8 +87,8 @@ class SsBudget(models.Model):
     achieve_earning12 = fields.Integer('実績_売上12月', readonly = True)
     achieve_profit12 = fields.Integer('実績_粗利12月', readonly = True)
 
-    budget_earnings = fields.Integer('予算_売上合計', readonly = True)
-    budget_profits = fields.Integer('予算_粗利合計', readonly = True)
+    budget_earnings = fields.Integer('予算_売上合計', readonly = True, store = True, compute='_compute_budget_earning')
+    budget_profits = fields.Integer('予算_粗利合計', readonly = True, store = True, compute='_compute_budget_profit')
     achieve_earnings = fields.Integer('実績_売上合計', readonly = True)
     achieve_profits = fields.Integer('実績_粗利合計', readonly = True)
 
@@ -113,7 +96,25 @@ class SsBudget(models.Model):
     achieve_expenses = fields.Integer('実績_諸費用', readonly = True)
 
     _sql_constraints = [
-        ('unique_bu_id',
-         'unique(bu_id, budget_year)', 'bu_id budget_year should be unique per bu!')]
+        ('unique_department',
+         'unique(department, budget_year)', 'department budget_year should be unique per bu!')]
 
+    # 予算_売上合計　自動計算
+    @api.depends('budget_earning1','budget_earning2','budget_earning3','budget_earning4',
+                'budget_earning5','budget_earning6','budget_earning7','budget_earning8',
+                'budget_earning9','budget_earning10','budget_earning11','budget_earning12') 
+    def _compute_budget_earning(self):
+        self.budget_earnings = (self.budget_earning1 + self.budget_earning2 + self.budget_earning3 
+                            + self.budget_earning4 + self.budget_earning5 + self.budget_earning6 
+                            + self.budget_earning7 + self.budget_earning8 + self.budget_earning9 
+                            + self.budget_earning10 + self.budget_earning11 + self.budget_earning12)
 
+    # 予算_粗利合計　自動計算
+    @api.depends('budget_profit1','budget_profit2','budget_profit3','budget_profit4',
+                'budget_profit5','budget_profit6','budget_profit7','budget_profit8',
+                'budget_profit9','budget_profit10','budget_profit11','budget_profit12')
+    def _compute_budget_profit(self):
+        self.budget_profits = (self.budget_profit1 + self.budget_profit2 + self.budget_profit3 
+                            + self.budget_profit4 + self.budget_profit5 + self.budget_profit6 
+                            + self.budget_profit7 + self.budget_profit8 + self.budget_profit9 
+                            + self.budget_profit10 + self.budget_profit11 + self.budget_profit12)
