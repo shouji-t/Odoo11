@@ -17,7 +17,7 @@ class ResPartner(models.Model):
 
     # SsPj class Many2one - David Tang
     # １対多項目のため、目的モデルで正反対の多対１関係を実装する
-    pj_ids = fields.One2many('ss.pj', 'partner_id', 'Pj')
+    #pj_ids = fields.One2many('ss.pj', 'partner_id', 'Pj')
 
     x_regdate = fields.Datetime('申請日', default=fields.Datetime.now, required=True)
     x_regstatus = fields.Selection([

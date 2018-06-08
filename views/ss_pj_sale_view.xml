@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- <record id="view_ss_pj_tree" model="ir.ui.view">
+            <field name="name">ss.pj.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="ss_pj">
+                    <field name="pj_id" />
+                </tree>
+            </field>
+        </record> -->
+
+        <!-- <record id="view_ss_pj_order_line_tree" model="ir.ui.view">
+            <field name="name">ss.pj.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="before">
+                    <field name="pj_id"/>
+                </xpath>
+            </field>
+        </record> -->
+
+        <record id="view_ss_pj_form" model="ir.ui.view">
+            <field name="name">ss.pj.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+
+                <!-- <xpath expr="//h1//field" position="replace">
+                </xpath> -->
+
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="pj_id"/>
+                    <field name="pj_name"/>
+                    <field name="pj_account_date" style="width: 60%%"/>
+                </xpath>
+
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="pj_bu_cd"/>
+                    <field name="pj_bu_name"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']/../.." position="after">
+                    <group col="4">
+                        <field name="pj_startdate" colspan="2"/>
+                        <field name="pj_enddate" colspan="2"/>
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='validity_date']" position="before">
+                    <field name="pj_state" style="width: 30%%"/>
+                    <field name="pj_type" style="width: 30%%"/>
+                </xpath>
+
+                <!-- validity_dateを隠す -->
+                <xpath expr="//field[@name='validity_date']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                </xpath>
+                
+                <!-- 支払条件を隠す -->
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+                <!-- order.line form デフォルトのフィールドを設定する -->
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="context">{'default_pj_id': pj_id, 
+                                            'default_pj_name': pj_name, 
+                                            'default_pj_account_date': pj_account_date}
+                    </attribute>
+                </xpath>
+                
+                <!-- order.line form -->
+                <xpath expr="//notebook//form" position="replace">
+                    <form string="Sales Order Lines">
+                            <group col="7">
+                                <field name="pj_id" readonly="1" colspan="2"/>
+                                <field name="pj_name" readonly="1" colspan="3" style="width:120%%"/>
+                                <field name="pj_account_date" readonly="1" colspan="2" style="width:130%%" />
+                            </group>
+                            <group col="2">
+                                <field name="pj_member_id" style="width:30%%"/>
+                                <field name="pj_member_type" style="width:10%%"/>
+                            </group>
+                              
+                            <group col="4">
+                                <field name="pj_price_unit" />
+                                <newline/>
+                                <field name="pj_duty_lowerlimit"/>
+                                <field name="pj_duty_upperlimit"/>
+                                <field name="pj_price_lowerlimit"/>
+                                <field name="pj_price_upperlimit"/>
+                                <field name="pj_manhour"/>
+                                <field name="pj_duty_hours"/>
+                                <field name="pj_hours_lowerlimit"/>
+                                <field name="pj_hours_upperlimit"/>
+                                <field name="pj_payoffhour"/>
+                            </group>
+                            
+                            <group col="12">
+                                <group colspan="4">
+                                    <field name="pj_payoffhour"/>
+                                    <field name="pj_excess_deduct"/>
+                                    <separator/>
+                                    <field name="pj_carfare"/>
+                                    <separator/>
+                                    <field name="pj_amount_subtotal"/>
+                                </group>
+                            </group>
+                        <group>
+                            <group>
+                                <field name="product_updatable" invisible="1"/>
+                                <field name="product_id"
+                                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                    attrs="{'readonly': [('product_updatable', '=', False)]}"
+                                    force_save="1"
+                                    />
+                                <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                <field name="invoice_status" invisible="1"/>
+                                <field name="qty_to_invoice" invisible="1"/>
+                                <field name="qty_delivered_updateable" invisible="1"/>
+                                <field name="price_subtotal" invisible="1"/>
+                                <label for="product_uom_qty" string="Ordered Quantity"/>
+                                <div>
+                                    <field
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
+                                        name="product_uom_qty" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
+                                        attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
+                                </div>
+                                <label for="qty_delivered" string="Delivered Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                    <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                </div>
+                                <label for="qty_invoiced" string="Invoiced Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                    <field name="qty_invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                </div>
+                                <field name="price_unit"/>
+                                <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                <div name="discount" groups="sale.group_discount_per_so_line">
+                                    <field name="discount" class="oe_inline"/> %%
+                                </div>
+                            </group>
+                            <group>
+                                <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                    attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                <label for="customer_lead"/>
+                                <div>
+                                    <field name="customer_lead" class="oe_inline"/> days
+                                </div>
+                                <label for="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
+                                <div>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting" options="{'color_field': 'color'}"/>
+                                </div>
+                            </group>
+                        </group>
+                        <label for="name"/>
+                        <field name="name"/>
+                        <div groups="base.group_no_one">
+                            <label for="invoice_lines"/>
+                            <field name="invoice_lines"/>
+                        </div>
+                        <field name="state" invisible="1"/>
+                    </form>
+                </xpath>
+
+                <!-- order.line tree -->
+                <xpath expr="//notebook//tree" position="replace">
+                    <tree string="Sales Order Lines">
+
+                        <field name="sequence" widget="handle"/>
+                        <field name="pj_id"/>
+                        <field name="pj_member_id"/>
+                        <field name="pj_member_type"/>
+                        <field name="pj_price_unit"/>
+                        <field name="pj_manhour"/>
+                        <field name="pj_excess_deduct"/>
+                        <field name="pj_carfare"/>
+                        <field name="pj_amount_subtotal"/>
+                        <field name="price_unit"/>
+                    </tree>
+                </xpath>
+
+                <!-- Tree viewで項目を追加・編集しない -->
+                <!-- <xpath expr="//tree" position="attributes">
+                    <attribute name="editable"></attribute>
+                </xpath> -->
+                
+            </field>
+        </record>
+        
+        <!-- <record id="view_ss_pj_order_line_form" model="ir.ui.view">
+            <field name="name">ss.pj.order.line.form</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+                <field name="arch" type="xml">
+                    <form string="ss_pj_detail">
+                        <sheet>
+                            <group col="7">
+                                <field name="pj_id" readonly="1" colspan="2"/>
+                                <field name="pj_name" readonly="1" colspan="3" style="width:120%%"/>
+                                <field name="pj_account_date" readonly="1" olspan="2" style="width:130%%" />
+                            </group>
+                            <group col="2">
+                                <field name="name" style="width:30%%"/>
+                                <field name="employee_type" style="width:10%%"/>
+                            </group>
+                              
+                            <group col="4">
+                                <field name="price_unit" />
+                                <newline/>
+                                <field name="duty_lowerlimit"/>
+                                <field name="duty_upperlimit"/>
+                                <field name="price_base"/>
+                                <field name="price_upperlimit"/>
+                                <field name="manhour"/>
+                                <field name="hours"/>
+                                <field name="hours_lowerlimit"/>
+                                <field name="hours_upperlimit"/>
+                                <field name="payoffhour"/>
+                            </group>
+                            
+                            <group col="12">
+                                <group colspan="4">
+                                    <field name="payoffhour"/>
+                                    <field name="excess_deduct"/>
+                                    <separator/>
+                                    <field name="carfare"/>
+                                    <separator/>
+                                    <field name="amount_subtotal"/>
+                                </group>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+        </record> -->
+
+        <record id="view_ss_pj_search" model="ir.ui.view">
+            <field name="name">ss.pj.search</field>
+            <field name="model">sale.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="PJ">
+                    <field name="name" />
+                    <field name="pj_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Evaluation Type" domain="[]"
+                            context="{'group_by':'evaluation_type'}" />
+                        <filter string="pj" domain="[]"
+                            context="{'group_by':'pj_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_ss_pj_view">
+            <field name="name">ss pj</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_pj_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_ss_pj_view_form">
+            <field name="act_window_id" ref="act_ss_pj_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_pj_form" />
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_ss_pj_view_tree">
+            <field name="act_window_id" ref="act_ss_pj_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale.view_order_tree" />
+        </record>
+    </data>
+</odoo>
