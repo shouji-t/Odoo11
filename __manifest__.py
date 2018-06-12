@@ -17,7 +17,7 @@
     'complexity': "easy",
     'author': 'Msd Cloud Integration',
     'website': 'http://www.msdcorp.co.jp',
-    'depends': ['crm','sale','base'],
+    'depends': ['crm','sale','base','hr','hr_expense'],
     'data': [
         'views/dumy_view.xml',
         'views/ss_res_partner_view.xml',
@@ -28,8 +28,10 @@
         'views/ss_pj_sale_view.xml',
         'views/ss_budget_view.xml',
         'menu/ss_menu.xml',
+        'data/ir_sequence_data.xml',
     ],
     'demo': [
+        # 'demo/dumy_demo.xml'
     ],
     'installable': True,
     'auto_install': False,
