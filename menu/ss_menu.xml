@@ -13,37 +13,37 @@
             groups="base.group_user" />
 
         <!-- MSD Menu 社内申請-->
-        <menuitem id="menu_msd_reg" name="社内申請"
+        <menuitem id="menu_msd_require" name="社内申請"
             parent="menu_msd_root" sequence="10"/>
-        <menuitem id="menu_msd_reg_new" name="新規取引先登録"
-            parent="menu_msd_reg" sequence="11"
+        <menuitem id="menu_msd_newpartner" name="新規取引先登録"
+            parent="menu_msd_require" sequence="11"
             action="ss_action_partner_form"
             groups="base.group_user" />
-        <menuitem id="menu_msd_reg_new2" name="経費申請"
-            parent="menu_msd_reg" sequence="12"
+        <menuitem id="menu_msd_expense" name="経費申請"
+            parent="menu_msd_require" sequence="12"
             action="hr_expense.hr_expense_actions_my_unsubmitted"
             groups="base.group_user" />
 
         <!-- MSD Menu 販売-->
         <menuitem id="menu_msd_sales" name="販売"
             parent="menu_msd_root" sequence="20" groups="base.group_user" />
-        <menuitem id="menu_msd_sales_21" name="顧客"
+        <menuitem id="menu_msd_sales_partner" name="顧客"
             parent="menu_msd_sales" sequence="21"
             action="base.action_partner_form"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_22" name="案件"
+        <menuitem id="menu_msd_sales_pipeline" name="案件"
             parent="menu_msd_sales" sequence="22"
             action="crm.action_your_pipeline"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_23" name="活動"
+        <menuitem id="menu_msd_sales_action" name="活動"
             parent="menu_msd_sales" sequence="23"
             action="crm.crm_activity_report_action"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_24" name="見積"
+        <menuitem id="menu_msd_sales_quotations" name="見積"
             parent="menu_msd_sales" sequence="24"
             action="sale.action_quotations"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_25" name="受注"
+        <menuitem id="menu_msd_sales_orders" name="受注"
             parent="menu_msd_sales" sequence="25"
             action="sale.action_orders"
             groups="base.group_user" />
@@ -51,15 +51,15 @@
         <!-- MSD Menu 購買-->
         <menuitem id="menu_msd_purchase" name="購買"
             parent="menu_msd_root" sequence="30"/>
-        <menuitem id="menu_msd_sales_31" name="仕入先"
+        <menuitem id="menu_msd_purchase_supplier" name="仕入先"
             parent="menu_msd_purchase" sequence="31"
             action="base.action_partner_supplier_form"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_32" name="見積"
+        <menuitem id="menu_msd_purchase_rfq" name="見積"
             parent="menu_msd_purchase" sequence="32"
             action="purchase.purchase_rfq"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_33" name="発注"
+        <menuitem id="menu_msd_purchase_action" name="発注"
             parent="menu_msd_purchase" sequence="33"
             action="purchase.purchase_form_action"
             groups="base.group_user" />
@@ -67,42 +67,74 @@
         <!-- MSD Menu PJ管理-->
         <menuitem id="menu_msd_pj" name="PJ管理"
             parent="menu_msd_root" sequence="40"/>
-        <menuitem id="menu_msd_sales_41" name="PJ登録"
+        <menuitem id="menu_msd_pj_reg" name="PJ登録"
             parent="menu_msd_pj" sequence="41"
             action="act_ss_pj_view"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_4" name="PJNO発行"
+        <menuitem id="menu_msd_sales_4" name="PJ検収"
             parent="menu_msd_pj" sequence="42"
+            action="act_ss_dumy_view"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_pj_expiring" name="終了見込み"
+            parent="menu_msd_pj" sequence="43"
+            action="act_ss_dumy_view"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_pj_contract" name="契約継続処理"
+            parent="menu_msd_pj" sequence="44"
             action="act_ss_dumy_view"
             groups="base.group_user" />
 
         <!-- MSD Menu BU管理-->
-        <menuitem id="menu_msd_bu" name="BU管理"
-            parent="menu_msd_root" sequence="50"
-            action="act_ss_dumy_view"
-            groups="base.group_user" />
 
         <!-- MSD Menu 要員管理-->
-        <menuitem id="menu_msd_res" name="要員管理"
-            parent="menu_msd_root" sequence="60"
+        <menuitem id="menu_msd_member" name="要員管理"
+            parent="menu_msd_root" sequence="60"/>
+        <menuitem id="menu_msd_member_employee" name="従業員"
+            parent="menu_msd_member" sequence="61"
+            action="hr.open_view_employee_list_my"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_member_bp" name="BP"
+            parent="menu_msd_member" sequence="62"
+            action="hr.open_view_employee_list_my"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_member_expiring" name="終了見込み要員"
+            parent="menu_msd_member" sequence="63"
             action="hr.open_view_employee_list_my"
             groups="base.group_user" />
 
         <!-- MSD Menu 予算-->
         <menuitem id="menu_msd_budget" name="予算"
             parent="menu_msd_root" sequence="70"/>
-        <menuitem id="menu_msd_budget_71" name="予算登録"
+        <menuitem id="menu_msd_budget_reg" name="予算登録"
             parent="menu_msd_budget" sequence="71"
             action="act_ss_budget_view"
             groups="base.group_user" />
 
-        <!-- MSD Menu 実績-->
-        <menuitem id="menu_msd_80" name="実績"
+        <!-- MSD Menu レポート-->
+        <menuitem id="menu_msd_report" name="販売分析"
             parent="menu_msd_root" sequence="80"/>
-        <menuitem id="menu_msd_sales_81" name="検収"
-            parent="menu_msd_80" sequence="81"
-            action="act_ss_dumy_view"
+        <menuitem id="menu_msd_sales_rep_sales" name="販売"
+            parent="menu_msd_report" sequence="81"
+            action="sale.action_order_report_all"
             groups="base.group_user" />
+        <menuitem id="menu_msd_sales_rep_tunnel" name="販売チャンネル"
+            parent="menu_msd_report" sequence="82"
+            action="sales_team.crm_team_salesteams_act"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_rep_alltunnel" name="全チャンネルの販売"
+            parent="menu_msd_report" sequence="83"
+            action="sale.report_all_channels_sales_action"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_comparison" name="予算と実績比較"
+            parent="menu_msd_report" sequence="85"
+            action="sale.report_all_channels_sales_action"
+            groups="base.group_user" />
+        <menuitem id="menu_msd_sales_next3m" name="3ヶ月先予測"
+            parent="menu_msd_report" sequence="86"
+            action="sale.report_all_channels_sales_action"
+            groups="base.group_user" />
+
+        <!-- MSD Menu 実績-->
 
         <!-- MSD Menu 社内掲示板-->
         <menuitem id="menu_msd_blog" name="社内掲示板"
@@ -110,39 +142,23 @@
             action="mail.mail_channel_action_client_chat"
             groups="base.group_user" />
 
-        <!-- MSD Menu レポート-->
-        <menuitem id="menu_msd_report" name="レポーティング"
-            parent="menu_msd_root" sequence="100"/>
-        <menuitem id="menu_msd_sales_rep_sales" name="販売"
-            parent="menu_msd_report" sequence="101"
-            action="sale.action_order_report_all"
-            groups="base.group_user" />
-        <menuitem id="menu_msd_sales_rep_tunnel" name="販売チャンネル"
-            parent="menu_msd_report" sequence="102"
-            action="sales_team.crm_team_salesteams_act"
-            groups="base.group_user" />
-        <menuitem id="menu_msd_sales_rep_alltunnel" name="全チャンネルの販売"
-            parent="menu_msd_report" sequence="103"
-            action="sale.report_all_channels_sales_action"
-            groups="base.group_user" />
-
         <!-- MSD Menu 設定-->
         <menuitem id="menu_msd_setting" name="設定"
-            parent="menu_msd_root" sequence="110"/>
+            parent="menu_msd_root" sequence="100"/>
         <menuitem id="menu_msd_sales_team_config" name="販売チーム"
-            parent="menu_msd_setting" sequence="111"
+            parent="menu_msd_setting" sequence="101"
             action="sales_team.sales_team_config_action"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_bu" name="BU"
-            parent="menu_msd_setting" sequence="112"
+        <menuitem id="menu_msd_department" name="BU"
+            parent="menu_msd_setting" sequence="102"
             action="hr.open_module_tree_department"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_113" name="PJ"
-            parent="menu_msd_setting" sequence="113"
-            action="act_ss_dumy_view"
+        <menuitem id="menu_msd_employee" name="要員"
+            parent="menu_msd_setting" sequence="103"
+            action="hr.open_view_employee_list_my"
             groups="base.group_user" />
-        <menuitem id="menu_msd_sales_114" name="要員"
-            parent="menu_msd_setting" sequence="114"
+        <menuitem id="menu_msd_employee_cost" name="原価管理"
+            parent="menu_msd_setting" sequence="109"
             action="hr.open_view_employee_list_my"
             groups="base.group_user" />
 
