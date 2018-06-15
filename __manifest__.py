@@ -9,11 +9,11 @@
 
 {
     'name': 'Ssm',
-    'version': '11.0.1.0.1',
+    'version': '11.0.1.0.7',
     'license': 'LGPL-3',
     'category': 'ERP',
     "sequence": 1,
-    'summary': 'MSD Ssm (Sales Support Management) System. OOO',
+    'summary': 'MSD Ssm (Sales Support Management) System. OO7',
     'complexity': "easy",
     'author': 'Msd Cloud Integration',
     'website': 'http://www.msdcorp.co.jp',
@@ -24,7 +24,6 @@
         'views/ss_crm_lead_view.xml',
         'views/ss_hr_department_view.xml',
         'views/ss_hr_employee_view.xml',
-        'views/ss_crm_lead_view.xml',
         'views/ss_pj_sale_view.xml',
         'views/ss_budget_view.xml',
         'menu/ss_menu.xml',

@@ -7,10 +7,9 @@
 #
 ###############################################################################
 
-from odoo import models, fields, api
 from odoo import api, fields, models, _
+from calendar import monthrange
 from datetime import datetime
-
 
 class SsPjOrder(models.Model):
     _inherit = "sale.order"
@@ -36,7 +35,7 @@ class SsPjOrder(models.Model):
         return result
 
     pj_name = fields.Char(u'PJ名', required=True)
-    pj_id = fields.Char(u'PJコード', size=12, compute='_compute_pj_id', store=True)
+    pj_id = fields.Char(u'PJコード', size=12, compute='_compute_pj_id', store=True, readonly=False)
 
     pj_account_date = fields.Char(u'経理年月', compute='_compute_pj_account_date', store=True)
     pj_long_date = fields.Date(u'経理年月', required=True)
@@ -63,15 +62,21 @@ class SsPjOrder(models.Model):
         ('done', u'終了'),
     ], string='PJ Status', copy=False, index=True, track_visibility='onchange', default='new')
     pj_startdate = fields.Date(u'PJ開始日', default=fields.Date.context_today, required=True)
-    pj_enddate = fields.Date(u'PJ予定終了日', default=fields.Date.context_today, required=True)
+    pj_enddate = fields.Date(u'PJ予定終了日')
 
     # pj_account_dateの生成
     @api.depends('pj_long_date')
     def _compute_pj_account_date(self):
         for record in self:
             if record.pj_long_date:
-                record.pj_account_date = datetime.strptime(record.pj_long_date, '%Y-%m-%d').strftime('%Y%m')
-                record.pj_long_date = datetime.strptime(record.pj_long_date, '%Y-%m-%d').strftime('%Y-%m-01')
+                # 月末を計算する　(閏年も含めて)
+                stringDate = datetime.strptime(record.pj_long_date, '%Y-%m-%d')
+                year = int(stringDate.strftime('%Y'))
+                month = int(stringDate.strftime('%m'))
+                last_day = str(monthrange(year, month)[1])
+
+                record.pj_account_date = stringDate.strftime('%Y%m')
+                record.pj_long_date = stringDate.strftime('%Y-%m-' + last_day)
 
     # PJ_IDを生成する
     @api.depends('pj_bu_cd', 'partner_id')
@@ -115,24 +120,24 @@ class SsPjOrderLine(models.Model):
     pj_is_duty = fields.Boolean(u'精算')
     pj_duty_lowerlimit = fields.Integer(u'精算下限')
     pj_duty_upperlimit = fields.Integer(u'精算上限')
-    pj_price_lowerlimit = fields.Integer(u'下限単価', compute='_compute_pj_price_lowerlimit')
-    pj_price_upperlimit = fields.Integer(u'上限単価', compute='_compute_pj_price_upperlimit')
-    pj_manhour = fields.Float(u'当月工数')
-    pj_duty_hours = fields.Integer(u'当月時間')
-    pj_hours_lowerlimit = fields.Integer(u'当月下限')
-    pj_hours_upperlimit = fields.Integer(u'当月上限')
-    pj_payoffhour = fields.Integer(u'精算時間', compute='_compute_pj_payoffhour')
-    pj_amount = fields.Integer(u'売上', compute='_compute_pj_amount')
-    pj_excess_deduct = fields.Integer(u'超過・控除', compute='_compute_pj_excess_deduct')
+    pj_price_lowerlimit = fields.Integer(u'下限単価', compute='_compute_pj_price_lowerlimit', store=True, readonly=False)
+    pj_price_upperlimit = fields.Integer(u'上限単価', compute='_compute_pj_price_upperlimit', store=True, readonly=False)
+    pj_manhour = fields.Float(u'当月工数', default=1)
+    pj_duty_hours = fields.Float(u'当月時間')
+    pj_hours_lowerlimit = fields.Integer(u'当月下限', compute='_compute_pj_hours_lowerlimit', store=True, readonly=False)
+    pj_hours_upperlimit = fields.Integer(u'当月上限', compute='_compute_pj_hours_upperlimit', store=True, readonly=False)
+    pj_payoffhour = fields.Float(u'精算時間', compute='_compute_pj_payoffhour', store=True)
+    pj_amount = fields.Integer(u'売上', compute='_compute_pj_amount', store=True)
+    pj_excess_deduct = fields.Integer(u'超過・控除', compute='_compute_pj_excess_deduct', store=True)
 
     # 小計項目を追加する
-    pj_subtotal = fields.Integer(u'小計', compute='_compute_pj_subtotal')
+    pj_subtotal = fields.Integer(u'小計', compute='_compute_pj_subtotal', store=True)
 
     pj_carfare = fields.Integer(u'交通費')
-    pj_amount_subtotal = fields.Integer(u'売上合計', compute='_compute_pj_amount_subtotal')
+    pj_amount_subtotal = fields.Integer(u'売上合計', compute='_compute_pj_amount_subtotal', store=True)
 
     # PJを取る
-    pj_id = fields.Char(related="order_id.pj_id", string=u"PJコード", store=True)
+    pj_id = fields.Char(related="order_id.pj_id", string=u"PJコード")
     pj_name = fields.Char(related="order_id.pj_name", string=u"PJ名称")
     pj_account_date = fields.Char(related="order_id.pj_account_date", string=u"経理年月")
 
@@ -143,18 +148,35 @@ class SsPjOrderLine(models.Model):
                                      [('name', '=', 'Default')]).id)
 
     # 計算項目
+    # 下限単価 pj_price_lowerlimit
     @api.depends('pj_price_unit', 'pj_duty_lowerlimit')
     def _compute_pj_price_lowerlimit(self):
         for record in self:
             if record.pj_price_unit and record.pj_duty_lowerlimit:
-                record.pj_price_lowerlimit = record.pj_price_unit / record.pj_duty_lowerlimit
+                record.pj_price_lowerlimit = round(record.pj_price_unit / record.pj_duty_lowerlimit)
 
+    # 上限単価 pj_price_upperlimit
     @api.depends('pj_price_unit', 'pj_duty_upperlimit')
     def _compute_pj_price_upperlimit(self):
         for record in self:
             if record.pj_price_unit and record.pj_duty_upperlimit:
-                record.pj_price_upperlimit = record.pj_price_unit / record.pj_duty_upperlimit
+                record.pj_price_upperlimit = round(record.pj_price_unit / record.pj_duty_upperlimit)
 
+    # 当月下限 pj_hours_lowerlimit
+    @api.depends('pj_duty_lowerlimit', 'pj_manhour')
+    def _compute_pj_hours_lowerlimit(self):
+        for record in self:
+            if record.pj_duty_lowerlimit and record.pj_manhour:
+                record.pj_hours_lowerlimit = round(record.pj_duty_lowerlimit * record.pj_manhour)
+
+    # 当月上限 pj_hours_upperlimit
+    @api.depends('pj_duty_upperlimit', 'pj_manhour')
+    def _compute_pj_hours_upperlimit(self):
+        for record in self:
+            if record.pj_duty_upperlimit and record.pj_manhour:
+                record.pj_hours_upperlimit = round(record.pj_duty_upperlimit * record.pj_manhour)
+
+    # 精算時間 pj_payoffhour
     @api.depends('pj_duty_lowerlimit', 'pj_duty_upperlimit', 'pj_duty_hours')
     def _compute_pj_payoffhour(self):
         for record in self:
@@ -163,29 +185,32 @@ class SsPjOrderLine(models.Model):
             elif record.pj_duty_hours and (record.pj_duty_hours > record.pj_duty_upperlimit):
                 record.pj_payoffhour = record.pj_duty_hours - record.pj_duty_upperlimit
 
-    @api.depends('pj_price_lowerlimit', 'pj_price_upperlimit', 'pj_duty_hours', 'pj_payoffhour')
-    def _compute_pj_excess_deduct(self):
-        for record in self:
-            if record.pj_payoffhour and record.pj_payoffhour < 0:
-                record.pj_excess_deduct = record.pj_price_lowerlimit * record.pj_payoffhour
-            elif record.pj_payoffhour and record.pj_payoffhour > 0:
-                record.pj_excess_deduct = record.pj_price_upperlimit * record.pj_payoffhour
-
-    # 売上
+    # 売上 pj_amount
     @api.depends('pj_price_unit', 'pj_manhour')
     def _compute_pj_amount(self):
         for record in self:
             record.pj_amount = record.pj_price_unit * record.pj_manhour
 
-    # 小計
+    # 超過・控除 pj_excess_deduct
+    @api.depends('pj_price_lowerlimit', 'pj_price_upperlimit', 'pj_duty_hours', 'pj_payoffhour')
+    def _compute_pj_excess_deduct(self):
+        for record in self:
+            if record.pj_payoffhour and record.pj_payoffhour <= 0:
+                record.pj_excess_deduct = record.pj_price_lowerlimit * record.pj_payoffhour
+            elif record.pj_payoffhour and record.pj_payoffhour > 0:
+                record.pj_excess_deduct = record.pj_price_upperlimit * record.pj_payoffhour
+
+    # 小計 pj_subtotal
     @api.depends('pj_amount', 'pj_excess_deduct')
     def _compute_pj_subtotal(self):
         for record in self:
-            record.pj_subtotal = record.pj_amount + record.pj_excess_deduct
+            if record.pj_amount and record.pj_excess_deduct:
+                record.pj_subtotal = record.pj_amount + record.pj_excess_deduct
 
-    #売上合計
-    @api.depends('pj_subtotal','pj_carfare')
+    # 売上合計 pj_amount_subtotal 小計+交通費
+    @api.depends('pj_subtotal', 'pj_carfare')
     def _compute_pj_amount_subtotal(self):
         for record in self:
-            record.pj_amount_subtotal =  record.pj_subtotal + record.pj_carfare
+            if record.pj_subtotal and record.pj_carfare:
+                record.pj_amount_subtotal = record.pj_subtotal + record.pj_carfare
 

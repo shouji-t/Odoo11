@@ -107,7 +107,9 @@
 
                     <group col="12">
                         <group colspan="4" style="text-align:right;">
+                            <field name="pj_amount"/>
                             <field name="pj_excess_deduct"/>
+                            <field name="pj_subtotal"/>
                             <separator/>
                             <field name="pj_carfare"/>
                             <separator/>
