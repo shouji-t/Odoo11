@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="view_ss_pj_sale_form" model="ir.ui.view">
+        <record id="view_ss_pj_form" model="ir.ui.view">
             <field name="name">ss.pj.form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
@@ -12,10 +12,8 @@
                 </xpath>
 
                 <xpath expr="//div//field[@name='name']" position="after">
-                    <field name="pj_account_date"/>
-                    <div class="oe_edit_only"><label for="pj" /></div>
-                    <field name="pj" options="{'no_create': True}" />
-                    <field name="pj_cd" invisible="1" />
+                    <div class="oe_edit_only"><label for="pj_id" /></div>
+                    <field name="pj_id"/><br/>
                     <div class="oe_edit_only"><label for="pj_name"/></div>
                     <field name="pj_name"/>
                 </xpath>
@@ -29,9 +27,16 @@
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="pj_partner_cd"/>
+                    <field name="x_partner_cd"/>
                     <field name="pj_bu_name"/>
                     <field name="pj_bu_cd"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']/../.." position="after">
+                    <group col="4">
+                        <field name="pj_startdate" colspan="2"/>
+                        <field name="pj_enddate" colspan="2"/>
+                    </group>
                 </xpath>
 
                 <xpath expr="//field[@name='validity_date']" position="before">
@@ -52,7 +57,7 @@
 
                 <!-- order.lineフォームにフィールドを渡す -->
                 <xpath expr="//field[@name='order_line']" position="attributes">
-                    <attribute name="context">{'default_pj_cd': pj_cd,
+                    <attribute name="context">{'default_pj_id': pj_id,
                                             'default_pj_name': pj_name,
                                             'default_pj_account_date': pj_account_date}
                     </attribute>
@@ -75,7 +80,7 @@
                 <!-- PJフィールドを追加する -->
                 <xpath expr="//notebook//field[@name='order_line']/form" position="inside">
                     <group col="7">
-                        <field name="pj_cd" readonly="1" colspan="2"/>
+                        <field name="pj_id" readonly="1" colspan="2"/>
                         <field name="pj_name" readonly="1" colspan="3" style="width:120%%"/>
                         <field name="pj_account_date" readonly="1" colspan="2" style="width:140%%" />
                     </group>
@@ -132,7 +137,7 @@
 
                 <!-- 使わないフィールドを隠す -->
                 <xpath expr="//tree//field[@name='product_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                    <attribute name="invisible">0</attribute>
                 </xpath>
                 <xpath expr="//tree//field[@name='layout_category_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -184,37 +189,39 @@
             </field>
         </record>
 
-        <record id="view_ss_pj_sale_search" model="ir.ui.view">
+        <record id="view_ss_pj_search" model="ir.ui.view">
             <field name="name">ss.pj.search</field>
             <field name="model">sale.order</field>
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
                 <search string="PJ">
                     <field name="name" />
-                    <field name="pj_cd" />
+                    <field name="pj_id" />
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter string="Evaluation Type" domain="[]"
                             context="{'group_by':'evaluation_type'}" />
                         <filter string="pj" domain="[]"
-                            context="{'group_by':'pj_cd'}" />
+                            context="{'group_by':'pj_id'}" />
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="view_ss_pj_sale_tree" model="ir.ui.view">
+        <record id="view_ss_order_tree" model="ir.ui.view">
             <field name="name">ss.pj.tree</field>
             <field name="model">sale.order</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
             <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
-                    <field name="pj_cd" string="PJコード"/>
+                    <field name="pj_id" string="PJコード"/>
                     <field name="pj_name" string="PJ名"/>
                     <field name="pj_account_date" string="経理年月"/>
                     <field name="pj_state" string="PJ Status"/>
-                    <field name="pj_partner_id"/>
+                    <field name="pj_startdate" string="PJ開始日"/>
+                    <field name="pj_enddate" string="PJ予定終了日"/>
+                    <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
@@ -224,29 +231,29 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="act_ss_pj_sale_view">
-            <field name="name">PJ計上</field>
+        <record model="ir.actions.act_window" id="act_ss_pj_view">
+            <field name="name">PJ登録</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_ss_pj_sale_search" />
+            <field name="search_view_id" ref="view_ss_pj_search" />
             <field name="domain">[]</field>
             <field name="context">{}</field>
         </record>
 
-        <record model="ir.actions.act_window.view" id="act_ss_pj_sale_view_form">
-            <field name="act_window_id" ref="act_ss_pj_sale_view" />
+        <record model="ir.actions.act_window.view" id="act_ss_pj_view_form">
+            <field name="act_window_id" ref="act_ss_pj_view" />
             <field name="sequence" eval="20" />
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_ss_pj_sale_form" />
+            <field name="view_id" ref="view_ss_pj_form" />
         </record>
 
-        <record model="ir.actions.act_window.view" id="act_ss_pj_sale_view_tree">
-            <field name="act_window_id" ref="act_ss_pj_sale_view" />
+        <record model="ir.actions.act_window.view" id="act_ss_pj_view_tree">
+            <field name="act_window_id" ref="act_ss_pj_view" />
             <field name="sequence" eval="10" />
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_ss_pj_sale_tree" />
+            <field name="view_id" ref="view_ss_order_tree" />
         </record>
     </data>
 </odoo>

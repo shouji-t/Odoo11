@@ -15,8 +15,8 @@ class SsBudget(models.Model):
     _rec_name = 'budget_year'
 
     # bu_id = fields.Many2one('ss.bu', '部署ID', required=True)
-    department = fields.Many2one('hr.department', '部門コード')
-    department_name = fields.Char('部門名', related='department.name')
+    department = fields.Many2one('hr.department', 'BUコード')
+    department_name = fields.Char('BU名', related='department.name')
 
     # Bu名称を取る
     # bu_name = fields.Char(related="bu_id.name", string="部署名称")
@@ -26,7 +26,7 @@ class SsBudget(models.Model):
         default=lambda self: self.env.user.company_id.id)
     # 予算年度リストを表示する
     budget_year = fields.Selection([
-                (num, str(num)) for num in 
+                (num, str(num)) for num in
                 range( ((datetime.now().year)-3), ((datetime.now().year)+10)) ], 
                 '予算年度', default=datetime.now().year)
 

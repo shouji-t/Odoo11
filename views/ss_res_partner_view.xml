@@ -6,11 +6,19 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-            <xpath expr="//form/sheet/group" position="after">
-                <group col="4">
-                    <field name="x_partner_cd" />
-                </group>
+            <xpath expr="//field[@name='type']" position="before">
+                <field name="x_partner_cd"/>
             </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                 <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <group name="accounting_entries" position="after">
+                <group string="EDI" name="edi">
+                    <field name="x_edi" />
+                    <field name="x_ediurl" />
+                </group>
+            </group>
         </field>
     </record>
 

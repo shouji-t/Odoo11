@@ -14,6 +14,7 @@ from datetime import datetime
 class SsPj(models.Model):
     _name = "ss.pj"
     _description = "PJ"
+    _rec_name = 'pj_cd'
     _order = 'pj_register_date desc'
 
     @api.model
@@ -30,6 +31,8 @@ class SsPj(models.Model):
         ('dispatch', u'派遣'),
         ('contract', u'請負'),
         ('subcontracting', u'業務委託'),
+        ('quasidelegation', u'準委任'),
+        ('delegation', u'委任'),
         ('maintaining', u'保守'),
         ('totalcontract', u'一括請負'),
         ('other', u'その他'),
@@ -55,15 +58,15 @@ class SsPj(models.Model):
     pj_bu_name = fields.Char(u'BU名', related='pj_bu_cd.name', readonly=True)
 
     # 顧客コード
-    pj_partner_id = fields.Many2one('res.partner', string='顧客', required=True)
-    pj_partner_cd = fields.Char(u'顧客コード', related='pj_partner_id.x_partner_cd', readonly=True)
+    pj_partner_id = fields.Many2one('res.partner', string='顧客', domain=[('customer', '=', True)], required=True)
+    pj_partner_cd = fields.Char(u'顧客コード', related='pj_partner_id.x_partner_cd', readonly=True, store=True)
 
     # PJ管理
     pj_state = fields.Selection([
         ('new', u'新規'),
         ('run', u'稼働中'),
         ('cancel', u'終止'),
-        ('done', u'終了'),
+        ('end', u'終了'),
     ], string='稼働状態', copy=False, index=True, track_visibility='onchange', default='new', required=True)
 
     #PJ日付
@@ -80,6 +83,9 @@ class SsPj(models.Model):
 
     #PJ合計金額
     pj_amount_total = fields.Integer(string=u'合計金額', store=True, readonly=True, compute='_amount_all', track_visibility='always')
+
+    #PJ原価金額
+    pj_cost_total = fields.Integer(string=u'原価金額', store=True, readonly=True, compute='_cost_all', track_visibility='always')
 
     #
     pj_note = fields.Text(u'備考')
@@ -100,6 +106,16 @@ class SsPj(models.Model):
                 'pj_amount_total': amount_untaxed + amount_tax,
             })
 
+    #  フォーム原価合計の計算
+    @api.depends('pj_line.pj_cost')
+    def _cost_all(self):
+        for pj in self:
+            cost_total = 0.0
+            for line in pj.pj_line:
+                cost_total += line.pj_cost
+            pj.update({
+                'pj_cost_total': cost_total,
+            })
 
 class SsPjLine(models.Model):
     _name = "ss.pj.line"
@@ -119,6 +135,10 @@ class SsPjLine(models.Model):
         ('personal', u'委託'),
         ('bp', u'BP'),
     ], string=u'要員区分')
+    pj_price_type = fields.Selection([
+        ('month', u'月給'),
+        ('hour', u'時給'),
+    ], string=u'単価区分', default='month', required=True)
     pj_price_unit = fields.Integer(u'売上単価')
     pj_price_purchase = fields.Integer(u'元単価')
     pj_payofftype = fields.Selection([
@@ -137,6 +157,7 @@ class SsPjLine(models.Model):
     pj_price_upperlimit = fields.Integer(u'上限単価', compute='_compute_pj_price', store=True, readonly=False)
     pj_manhour_contract = fields.Float(u'標準工数', default=1)
     pj_amount = fields.Integer(u'売上', compute='_compute_pj_amount', store=True)
+    pj_cost = fields.Integer(u'原価', compute='_compute_pj_cost', store=True)
 
     # PJを取る
     pj_cd = fields.Char(related="pj_id.pj_cd", string=u"PJコード")
@@ -186,4 +207,10 @@ class SsPjLine(models.Model):
     def _compute_pj_amount(self):
         for record in self:
             record.pj_amount = record.pj_price_unit * record.pj_manhour_contract
+
+    # 原価 pj_cost
+    @api.depends('pj_price_purchase', 'pj_manhour_contract')
+    def _compute_pj_cost(self):
+        for record in self:
+            record.pj_cost = record.pj_price_purchase * record.pj_manhour_contract
 

@@ -18,11 +18,11 @@
         <menuitem id="menu_msd_newpartner" name="新規取引先登録"
             parent="menu_msd_require" sequence="11"
             action="ss_action_partner_form"
-            groups="base.group_user" />
+            groups="msd_ssm.group_ssm_user_l1" />
         <menuitem id="menu_msd_expense" name="経費申請"
             parent="menu_msd_require" sequence="12"
             action="hr_expense.hr_expense_actions_my_unsubmitted"
-            groups="base.group_user" />
+            groups="msd_ssm.group_ssm_user_l2" />
 
         <!-- MSD Menu 販売-->
         <menuitem id="menu_msd_sales" name="販売"
@@ -73,7 +73,7 @@
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_4" name="PJ検収"
             parent="menu_msd_pj" sequence="42"
-            action="act_ss_dumy_view"
+            action="act_ss_pj_sale_view"
             groups="base.group_user" />
         <menuitem id="menu_msd_pj_expiring" name="終了見込み"
             parent="menu_msd_pj" sequence="43"
@@ -91,15 +91,15 @@
             parent="menu_msd_root" sequence="60"/>
         <menuitem id="menu_msd_member_employee" name="従業員"
             parent="menu_msd_member" sequence="61"
-            action="hr.open_view_employee_list_my"
+            action="ss_view_employee_list_employee"
             groups="base.group_user" />
         <menuitem id="menu_msd_member_bp" name="BP"
             parent="menu_msd_member" sequence="62"
-            action="hr.open_view_employee_list_my"
+            action="ss_view_employee_list_bp"
             groups="base.group_user" />
         <menuitem id="menu_msd_member_expiring" name="終了見込み要員"
             parent="menu_msd_member" sequence="63"
-            action="hr.open_view_employee_list_my"
+            action="ss_open_view_employee_list"
             groups="base.group_user" />
 
         <!-- MSD Menu 予算-->

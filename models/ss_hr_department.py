@@ -13,7 +13,7 @@ class SsHrDepartment(models.Model):
     _inherit = 'hr.department'
     _rec_name = 'x_department_cd'
 
-    x_department_cd = fields.Char('部門コード')
+    x_department_cd = fields.Char('BUコード')
 
     budget_ids = fields.One2many('ss.budget', 'department', 'Budgets in this department')
 

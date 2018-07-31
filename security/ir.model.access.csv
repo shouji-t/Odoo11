@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ssm_user,ssm_user,model_ssm,group_ssm_user,1,1,1,1
-access_ssm_other,ssm,model_ssm,group_ssm_other,1,0,0,0
+access_sale_order_user_l1,ssm_user_l1,model_sale_order,msd_ssm.group_ssm_user_l1,1,1,1,1
+access_sale_order_user_l2,ssm_user_l2,model_sale_order,msd_ssm.group_ssm_user_l2,1,1,1,1
+access_sale_order_user_other,ssm_user_other,model_sale_order,msd_ssm.group_ssm_other,1,0,0,0

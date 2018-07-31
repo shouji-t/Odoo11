@@ -13,24 +13,27 @@
                     <field name="pj_amount_total"/>
                     <field name="pj_state"/>
                     <field name="pj_type"/>
+                    <field name="pj_cd"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb16">
                                     <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.pj_cd.value"/></span></strong>
+                                        <span><strong><t t-esc="record.pj_cd.value"/></strong></span>
                                     </div>
                                     <strong><field name="pj_amount_total"/></strong>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong><field name="pj_partner_id"/></strong>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left text-muted">
                                         <div>
-                                            <span><t t-esc="record.pj_name.value"/></span>
+                                            <span><strong><t t-esc="record.pj_name.value"/></strong></span>
                                         </div>
-                                        <br></br>
-                                        <div>
-                                            <span><t t-esc="record.pj_state.value"/> <t t-esc="record.pj_type.value"/></span>
-                                        </div>
+                                    </div>
+                                    <div>
+                                        <span><t t-esc="record.pj_type.value"/> <t t-esc="record.pj_state.value"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -102,9 +105,11 @@
                                             <field name="pj_member_id" style="width:35%%"/>
                                             <field name="pj_member_type" style="width:35%%"/>
                                             <field name="pj_payofftype" style="width:35%%"/>
+                                            <field name="pj_price_type" style="width:35%%"/>
                                         </group>
                                         <group col="2" >
                                             <field name="pj_price_unit"  style="width:35%%"/>
+                                            <field name="pj_price_purchase"  style="width:35%%"/>
                                             <field name="pj_duty_lowerlimit" style="width:35%%"/>
                                             <field name="pj_duty_upperlimit" style="width:35%%"/>
                                             <field name="pj_price_lowerlimit" style="width:35%%"/>
@@ -114,6 +119,7 @@
                                         <group col="12">
                                             <group colspan="4" style="text-align:right;">
                                                 <field name="pj_amount"/>
+                                                <field name="pj_cost"/>
                                             </group>
                                         </group>
                                     </form>
@@ -121,6 +127,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="pj_member_id"/>
                                         <field name="pj_member_type"/>
+                                        <field name="pj_price_unit"/>
                                         <field name="pj_duty_lowerlimit"/>
                                         <field name="pj_duty_upperlimit"/>
                                         <field name="pj_price_lowerlimit"/>
@@ -168,18 +175,55 @@
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
                 <search string="BUコード">
+                    <filter domain="[('pj_state','=','new')]" string="PJ新規"/>
+                    <filter domain="[('pj_state','=','end')]" string="PJ終了"/>
+                    <separator/>
+                    <filter domain="[('pj_type','=','dispatch')]" string="派遣"/>
+                    <filter domain="[('pj_type','=','contract')]" string="請負"/>
+                    <filter domain="[('pj_type','=','maintaining')]" string="保守"/>
+                    <separator/>
                     <field name="pj_partner_cd" />
                     <field name="pj_bu_cd" />
-                    <newline />
+                    <separator/>
+                    <field name="pj_type" />
+                    <field name="pj_state" />
                     <group expand="0" string="Group By...">
-                        <filter string="Parterner" domain="[]"
+                        <filter string="顧客" domain="[]"
                             context="{'group_by':'pj_partner_cd'}" />
                         <filter string="BUコード" domain="[]"
                             context="{'group_by':'pj_bu_cd'}" />
+                        <separator/>
+                        <filter string="PJ種別" domain="[]"
+                            context="{'group_by':'pj_type'}" />
+                        <filter string="PJ状態" domain="[]"
+                            context="{'group_by':'pj_state'}" />
                     </group>
                 </search>
             </field>
         </record>
+
+        <!-- graph View -->
+        <record  id="view_ss_pj_graph" model="ir.ui.view">
+            <field name="name">ss.pj.graph</field>
+            <field name="model">ss.pj</field>
+            <field name="arch" type="xml">
+                <graph string="PJ">
+                    <field name="pj_bu_cd"/>
+                    <field name="pj_amount_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <!-- pivot View -->
+        <!--<record id="view_ss_pj_pivot" model="ir.ui.view">-->
+            <!--<field name="name">sale.order.pivot</field>-->
+            <!--<field name="model">sale.order</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<pivot string="PJ">-->
+                    <!--<field name="pj_bu_cd" type="row"/>-->
+                    <!--<field name="pj_amount_total" type="measure"/>-->
+                <!--</pivot>-->
+            <!--</field>-->
+        <!--</record>-->
 
         <!-- Actions -->
         <record model="ir.actions.act_window" id="act_ss_pj_view">
@@ -187,7 +231,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ss.pj</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,pivot,graph</field>
             <field name="search_view_id" ref="view_ss_pj_search" />
             <field name="domain">[]</field>
             <field name="context">{}</field>

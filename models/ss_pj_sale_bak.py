@@ -14,22 +14,56 @@ from datetime import datetime
 class SsPjOrder(models.Model):
     _inherit = "sale.order"
 
-    pj = fields.Many2one('ss.pj', u'pj')
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            if 'company_id' in vals:
+                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code(
+                    'ss.pj') or _('New')
+            else:
+                vals['name'] = self.env['ir.sequence'].next_by_code('ss.pj') or _('New')
 
-    # PJ情報
-    pj_cd = fields.Char(related="pj.pj_cd", string=u"PJコード", readonly=True, store=True)
-    pj_name = fields.Char(related="pj.pj_name", string=u"PJ名称", readonly=True, store=True)
-    pj_type = fields.Selection(related="pj.pj_type", string=u"PJ種別", readonly=True, store=True)
-    pj_bu_cd = fields.Many2one(related="pj.pj_bu_cd", string=u"BUコード", readonly=True, store=True)
-    pj_bu_name = fields.Char(related="pj.pj_bu_name", string=u"BU名", readonly=True, store=True)
-    pj_partner_cd = fields.Char(related="pj.pj_partner_cd", string=u"顧客コード", readonly=True, store=True)
-    pj_state = fields.Selection(related="pj.pj_state", string=u"PJ状態", readonly=True, store=True)
-    pj_partner_id = fields.Many2one(related="pj.pj_partner_id", string=u"顧客", readonly=True, store=True)
-    # partner_id = fields.Many2one(related="pj.pj_partner_id", string=u"顧客", readonly=True, store=True)
+        # Makes sure partner_invoice_id', 'partner_shipping_id' and 'pricelist_id' are defined
+        if any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            addr = partner.address_get(['delivery', 'invoice'])
+            vals['partner_invoice_id'] = vals.setdefault('partner_invoice_id', addr['invoice'])
+            vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
+            vals['pricelist_id'] = vals.setdefault('pricelist_id',
+                                                   partner.property_product_pricelist and partner.property_product_pricelist.id)
+        result = super(SsPjOrder, self).create(vals)
+        return result
 
-    # 経理年月
+    pj_name = fields.Char(u'PJ名', required=True)
+    pj_id = fields.Char(u'PJコード', size=12, compute='_compute_pj_id', store=True, readonly=False)
+
     pj_account_date = fields.Char(u'経理年月', compute='_compute_pj_account_date', store=True)
     pj_long_date = fields.Date(u'経理年月', required=True)
+
+    pj_type = fields.Selection([
+        ('dispatch', u'派遣'),
+        ('contract', u'請負'),
+        ('subcontracting', u'業務委託'),
+        ('maintaining', u'保守'),
+        ('other', u'その他'),
+    ], string=u'種別')
+
+    # BU
+    pj_bu_cd = fields.Many2one('hr.department', u'BUコード')
+    pj_bu_name = fields.Char(u'BU名', related='pj_bu_cd.name', readonly=True)
+
+    # 顧客コード
+    x_partner_cd = fields.Char(u'顧客コード', related='partner_id.x_partner_cd', readonly=True)
+
+    # PJ管理
+    pj_state = fields.Selection([
+        ('new', u'新規'),
+        ('run', u'稼働中'),
+        ('cancel', u'終止'),
+        ('done', u'終了'),
+    ], string='PJ Status', copy=False, index=True, track_visibility='onchange', default='new')
+    pj_startdate = fields.Date(u'PJ開始日', default=fields.Date.context_today, required=True)
+    pj_enddate = fields.Date(u'PJ予定終了日')
 
     # pj_account_dateの生成
     @api.depends('pj_long_date')
@@ -44,6 +78,13 @@ class SsPjOrder(models.Model):
 
                 record.pj_account_date = stringDate.strftime('%Y%m')
                 record.pj_long_date = stringDate.strftime('%Y-%m-' + last_day)
+
+    # PJ_IDを生成する
+    @api.depends('pj_bu_cd', 'partner_id')
+    def _compute_pj_id(self):
+        for record in self:
+            if record.pj_bu_cd.x_department_cd and record.partner_id.x_partner_cd:
+                record.pj_id = record.pj_bu_cd.x_department_cd + record.partner_id.x_partner_cd + record.name
 
     #  フォーム合計の計算
     @api.depends('order_line.pj_amount_subtotal')
@@ -61,6 +102,7 @@ class SsPjOrder(models.Model):
                 'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
                 'amount_total': amount_untaxed + amount_tax,
             })
+
 
 class SsPjOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -107,7 +149,7 @@ class SsPjOrderLine(models.Model):
     pj_amount_subtotal = fields.Monetary(u'売上合計', compute='_compute_pj_amount_subtotal', store=True)
 
     # PJを取る
-    pj_cd = fields.Char(related="order_id.pj_cd", string=u"PJコード")
+    pj_id = fields.Char(related="order_id.pj_id", string=u"PJコード")
     pj_name = fields.Char(related="order_id.pj_name", string=u"PJ名称")
     pj_account_date = fields.Char(related="order_id.pj_account_date", string=u"経理年月")
 
@@ -130,15 +172,32 @@ class SsPjOrderLine(models.Model):
     #   売上単価(pj_price_unit)
 
     # 2.精算条件=updown:上下割　
+    #   下限単価(pj_price_lowerlimit) = 売上単価(pj_price_unit) / 精算下限(pj_duty_lowerlimit)
+    #   上限単価(pj_price_upperlimit) = 売上単価(pj_price_unit) / 精算上限(pj_duty_upperlimit)
     #   当月下限(pj_hours_lowerlimit)
     #   当月上限(pj_hours_upperlimit)
     #
     # 3.精算条件=middle:中間割　
     #
+    #
     #------------------------------------------------------------------
     #
 
     # 計算項目
+
+    # 単価計算: 下限単価(pj_price_lowerlimit) 上限単価(pj_price_upperlimit)
+    @api.depends('pj_price_unit', 'pj_duty_lowerlimit', 'pj_duty_upperlimit', 'pj_payofftype')
+    def _compute_pj_price(self):
+        for record in self:
+            if record.pj_payofftype == 'updown':
+                if record.pj_price_unit and record.pj_duty_lowerlimit:
+                    record.pj_price_lowerlimit = round(record.pj_price_unit / record.pj_duty_lowerlimit)
+                if record.pj_price_unit and record.pj_duty_upperlimit:
+                    record.pj_price_upperlimit = round(record.pj_price_unit / record.pj_duty_upperlimit)
+            elif record.pj_payofftype == 'middle':
+                if record.pj_price_unit and record.pj_duty_lowerlimit and record.pj_duty_upperlimit:
+                    record.pj_price_lowerlimit = round(record.pj_price_unit / ((record.pj_duty_lowerlimit + record.pj_duty_upperlimit) / 2))
+                    record.pj_price_upperlimit = record.pj_price_lowerlimit
 
     # 当月下限 pj_hours_lowerlimit 当月上限 pj_hours_upperlimit
     @api.depends('pj_duty_lowerlimit', 'pj_duty_upperlimit', 'pj_manhour', 'pj_payofftype')
@@ -189,4 +248,11 @@ class SsPjOrderLine(models.Model):
         for record in self:
             record.pj_amount_subtotal = record.pj_subtotal + record.pj_carfare + record.pj_adjustment
 
+
+class SsPj(models.Model):
+    _name = "ssm.pj"
+    _inherit = "sale.order"
+
+    x_pj_name = fields.Char(u'PJ名', required=True)
+    x_pj_id = fields.Char(u'PJコード')
 

@@ -29,3 +29,5 @@ class ResPartner(models.Model):
     x_contract = fields.Boolean('契約書', default=False)
     x_order = fields.Boolean('注文書', default=False)
     x_purchase = fields.Boolean('発注書', default=False)
+    x_edi = fields.Boolean('EDI', default=False)
+    x_ediurl = fields.Char('EDIUrl', default=False)
