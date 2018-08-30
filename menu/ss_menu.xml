@@ -73,7 +73,7 @@
             groups="base.group_user" />
         <menuitem id="menu_msd_sales_4" name="PJ検収"
             parent="menu_msd_pj" sequence="42"
-            action="act_ss_pj_sale_view"
+            action="act_ss_pj_order_view"
             groups="base.group_user" />
         <menuitem id="menu_msd_pj_expiring" name="終了見込み"
             parent="menu_msd_pj" sequence="43"

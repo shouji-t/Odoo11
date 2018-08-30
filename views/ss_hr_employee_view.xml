@@ -74,11 +74,14 @@
                             <div>
                                 <field name="name"/>
                             </div>
+                            <div>
+                                <field name="x_department_name"/>
+                            </div>
                         </div>
                     </div>
 
                     <div class="oe_kanban_bottom">
-                        <field name="x_department_name"/>
+                        <field name="x_partner_id"/>
                     </div>
                 </div>
             </xpath>

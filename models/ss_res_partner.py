@@ -8,6 +8,7 @@
 ###############################################################################
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
 
 
 class ResPartner(models.Model):
@@ -31,3 +32,9 @@ class ResPartner(models.Model):
     x_purchase = fields.Boolean('発注書', default=False)
     x_edi = fields.Boolean('EDI', default=False)
     x_ediurl = fields.Char('EDIUrl', default=False)
+
+# @api.constrains('x_partner_cd')
+# def _check_partner_cd(self):
+#  for record in self:
+#      if record.x_partner_cd and  record.x_partner_cd:
+#          raise ValidationError("コードが重複しております。")

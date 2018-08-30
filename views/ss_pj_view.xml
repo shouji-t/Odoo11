@@ -73,6 +73,7 @@
                 <form string="ss_pj">
                     <sheet>
                         <H1>
+                            <button name="action_SetNewPJNo" type="object" string="PJ自動採番" class="btn-primary"/>
                             <group name="Pj_cd_name" string="PJ情報">
                                 <field name="pj_cd"/>
                                 <field name="pj_name"/>
@@ -254,5 +255,52 @@
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="view_ss_pj_kanban"/>
         </record>
+
+        <act_window
+            id="act_create_ss_pj_order_view"
+            name="PJ検収作成"
+            res_model="ss.pj.order"
+            src_model="ss.pj"/>
+
+        <!--<act_window-->
+            <!--id="account.action_all_partner_invoices"-->
+            <!--name="All Invoices"-->
+            <!--res_model="account.invoice"-->
+            <!--domain="[('partner_id', 'child_of', active_id)]"-->
+            <!--src_model="res.partner"/>-->
+
+        <!--<act_window-->
+            <!--id="act_account_acount_move_line_open_unreconciled"-->
+            <!--name="Unreconciled Entries"-->
+            <!--res_model="account.move.line"-->
+            <!--context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"-->
+            <!--src_model="account.account"/>-->
+
+        <!--<act_window-->
+            <!--id="action_move_line_select"-->
+            <!--name="Journal Items"-->
+            <!--context="{'search_default_account_id': [active_id]}"-->
+            <!--res_model="account.move.line"-->
+            <!--src_model="account.account"/>-->
+
+        <!--<act_window-->
+            <!--id="action_move_select"-->
+            <!--name="Journal Entries"-->
+            <!--context="{'search_default_dummy_account_id': [active_id]}"-->
+            <!--res_model="account.move"/>-->
+
+        <!--<act_window-->
+            <!--id="action_move_line_select_by_type"-->
+            <!--name="Journal Items"-->
+            <!--context="{'search_default_user_type_id': [active_id]}"-->
+            <!--res_model="account.move.line"-->
+            <!--src_model="account.account.type"/>-->
+
+        <!--<act_window-->
+            <!--id="action_move_line_select_by_partner"-->
+            <!--name="Journal Items"-->
+            <!--context="{'search_default_partner_id': [active_id]}"-->
+            <!--res_model="account.move.line"-->
+            <!--src_model="res.partner"/>-->
     </data>
 </odoo>

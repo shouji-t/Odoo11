@@ -17,6 +17,11 @@ class SsPj(models.Model):
     _rec_name = 'pj_cd'
     _order = 'pj_register_date desc'
 
+    @api.multi
+    def action_SetNewPJNo(self):
+        for o_pj in self:
+            o_pj.pj_note = "S001 -- Suli"
+
     @api.model
     def create_pj_cd(self):
        for pj in self:
