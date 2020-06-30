@@ -7,7 +7,11 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="before">
+                <button name="action_SetNewPartnerCd" type="object" string="CD採番" class="btn-primary"
+                        attrs="{'invisible': [('x_partner_cd', '!=', 'NEW')]}"/>
                 <field name="x_partner_cd"/>
+                <field name="display_name"/>
+                <!--<field name="x_shortname"/>-->
             </xpath>
             <xpath expr="//field[@name='vat']" position="attributes">
                  <attribute name="invisible">1</attribute>
@@ -30,6 +34,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='display_name']" position="before">
                 <field name="x_partner_cd"/>
+                <!--<field name="x_shortname"/>-->
             </xpath>
             <xpath expr="//div[@class='oe_kanban_details']" position="after">
                 <strong class="o_kanban_record_title oe_partner_heading"><field name="x_partner_cd"/></strong>
@@ -43,39 +48,29 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='display_name']" position="after">
+            <xpath expr="//field[@name='display_name']" position="before">
                 <field name="x_partner_cd"/>
+                <!--<field name="x_shortname"/>-->
             </xpath>
         </field>
     </record>
 
-    <!-- Partner Tree-->
-    <record id="ss_view_partner_tree" model="ir.ui.view">
-        <field name="name">ss.res.partner.tree</field>
-        <field name="model">res.partner</field>
-        <field eval="8" name="priority"/>
-        <field name="arch" type="xml">
-            <tree string="Contacts">
-                <field name="display_name" string="Name"/>
-                <field name="function" invisible="1"/>
-                <field name="x_partner_cd"/>
-                <field name="phone"/>
-                <field name="email"/>
-                <field name="user_id" invisible="1"/>
-                <field name="is_company" invisible="1"/>
-                <field name="country_id" invisible="1"/>
-                <field name="parent_id" invisible="1"/>
-                <field name="active" invisible="1"/>
-            </tree>
-        </field>
-    </record>
+    <!--<record id="ss_view_res_partner_filter" model="ir.ui.view">-->
+        <!--<field name="name">res.partner.select</field>-->
+        <!--<field name="model">res.partner</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='name']" position="after">-->
+                <!--<field name="x_partner_cd"/>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
 
-    <record id="ss_view_partner_form" model="ir.ui.view">
+    <record id="ss_view_partner_form_new" model="ir.ui.view">
         <field name="name">ss.res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Partners">
+        <form string="Partners">
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="toggle_active" type="object"
@@ -110,6 +105,7 @@
                         <field name="x_regstatus"/>
                         <field name="user_id"/>
                         <field name="x_partner_cd"/>
+                        <!--<field name="x_shortname"/>-->
                     </group>
                     <group name="info">
                         <field name="customer"/>
@@ -265,11 +261,31 @@
                     </page>
                 </notebook>
             </sheet>
-            </form>
+        </form>
         </field>
     </record>
 
-    <record id="ss_view_res_partner_filter" model="ir.ui.view">
+    <!-- Partner Tree-->
+    <record id="ss_view_partner_tree_new" model="ir.ui.view">
+        <field name="name">res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field eval="8" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Contacts">
+                <field name="x_regdate"/>
+                <field name="x_partner_cd"/>
+                <field name="display_name" string="Name"/>
+                <!--<field name="x_shortname"/>-->
+                <field name="user_id"/>
+                <field name="x_regstatus"/>
+                <field name="x_contract"/>
+                <field name="x_order"/>
+                <field name="x_purchase"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ss_view_res_partner_filter_new" model="ir.ui.view">
         <field name="name">ss.res.partner.select</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
@@ -279,13 +295,17 @@
                <filter name="filter_my_partners" help="My Partners"
                        domain="[('user_id','=',uid)]"/>
                <separator/>
-               <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>
-               <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
+               <filter string="仮" name="type_temp" domain="[('x_regstatus','=','temp')]"/>
+               <filter string="申請中" name="type_regist" domain="[('x_regstatus','=','regist')]"/>
+               <filter string="処理中" name="type_process" domain="[('x_regstatus','=','process')]"/>
+               <filter string="処理済" name="type_done" domain="[('x_regstatus','=','done')]"/>
+               <filter string="廃棄" name="type_cancel" domain="[('x_regstatus','=','cancel')]"/>
                <separator/>
                <filter string="Customers" name="customer" domain="[('customer','=',1), ('parent_id', '=', False)]"/>
                <filter string="Vendors" name="supplier" domain="[('supplier','=',1), ('parent_id', '=', False)]"/>
                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                <separator/>
+               <field name="x_partner_cd" />
                <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                <field name="user_id"/>
                <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
@@ -297,7 +317,7 @@
     </record>
 
     <!-- Partner Kanban View -->
-    <record model="ir.ui.view" id="ss_res_partner_kanban_view">
+    <record model="ir.ui.view" id="ss_res_partner_kanban_view_new">
         <field name="name">ss.res.partner.kanban</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
@@ -321,6 +341,9 @@
                 <field name="category_id"/>
                 <field name="image_small"/>
                 <field name="type"/>
+                <field name="x_regstatus"/>
+                <field name="x_partner_cd"/>
+                <!--<field name="x_shortname"/>-->
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_res_partner_kanban">
@@ -356,6 +379,8 @@
                                     <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
                                     <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
                                     <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                    <li t-if="record.x_partner_cd.raw_value" class="o_text_overflow"><field name="x_partner_cd"/></li>
+                                    <li t-if="record.x_regstatus.raw_value" class="o_text_overflow"><field name="x_regstatus"/></li>
                                 </ul>
                                 <div class="oe_kanban_partner_links"/>
                             </div>
@@ -367,14 +392,15 @@
         </field>
     </record>
 
-    <record id="ss_action_partner_form" model="ir.actions.act_window">
+    <record id="ss_action_partner_form_new" model="ir.actions.act_window">
         <field name="name">新規取引</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{"search_default_customer":1}</field>
-        <field name="search_view_id" ref="ss_view_res_partner_filter"/>
+        <field name="context">{"search_default_type_regist":1, "search_default_type_process":1}</field>
+        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="search_view_id" ref="ss_view_res_partner_filter_new"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a contact in your address book.
@@ -388,20 +414,20 @@
     <record id="ss_action_partner_form_view1" model="ir.actions.act_window.view">
         <field eval="0" name="sequence"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="ss_res_partner_kanban_view"/>
-        <field name="act_window_id" ref="ss_action_partner_form"/>
+        <field name="view_id" ref="ss_res_partner_kanban_view_new"/>
+        <field name="act_window_id" ref="ss_action_partner_form_new"/>
     </record>
     <record id="ss_action_partner_form_view2" model="ir.actions.act_window.view">
         <field eval="2" name="sequence"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="ss_view_partner_form"/>
-        <field name="act_window_id" ref="ss_action_partner_form"/>
+        <field name="view_id" ref="ss_view_partner_form_new"/>
+        <field name="act_window_id" ref="ss_action_partner_form_new"/>
     </record>
     <record id="ss_action_partner_tree_view1" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="ss_view_partner_tree"/>
-        <field name="act_window_id" ref="ss_action_partner_form"/>
+        <field name="view_id" ref="ss_view_partner_tree_new"/>
+        <field name="act_window_id" ref="ss_action_partner_form_new"/>
     </record>
 
 </odoo>

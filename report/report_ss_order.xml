@@ -1,7 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="report_ss_order">
+        <template id="report_ss_pj_order">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <br></br>
+                            <div class="oe_structure"/>
+                            <br/>
+
+                            <div class="row text-center">
+                                <h2>
+                                    <strong>請 求 書</strong>
+                                </h2>
+                            </div>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <div class="row">
+                                <strong>ご請求金額</strong>
+                            </div>
+                            <div class="row">
+                                <strong>お支払い期限</strong>
+                            </div>
+                            <br></br>
+                            <br></br>
+                            <div class="row">
+                                <strong>＊請求明細をご確認のうえ、お振込み期日までに上記口座へお振込みをお願い致します。</strong>
+                            </div>
+                            <div class="row">
+                                <strong>＊お振込み手数料はお客様にてご負担をお願い致します。</strong>
+                            </div>
+                            <br></br>
+                            <br></br>
+                            <div class="row">
+                                <strong>請求明細</strong>
+                            </div>
+                            <table width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <b>件名 </b>
+                                        </td>
+                                        <td>
+                                            <b>単価 </b>
+                                        </td>
+                                        <td>
+                                            <b>数量 </b>
+                                        </td>
+                                        <td>
+                                            <b>金額 </b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
         </template>
     </data>
 </odoo>

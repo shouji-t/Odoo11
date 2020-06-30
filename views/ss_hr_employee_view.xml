@@ -22,9 +22,8 @@
                               options='{"always_reload": True, "highlight_first_line": True}'/>
                           <field name="work_location"/>
                           <field name="work_email" widget="email"/>
-                          <field name="mobile_phone"/>
-                          <field name="work_phone"/>
-                          <field name="x_kinmu_kubun"/>
+                          <field name="mobile_phone" widget="phone"/>
+                          <field name="work_phone" widget="phone"/>
                         </group>
                     </group>
                     <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -33,7 +32,9 @@
 
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="x_partner_id" attrs="{'invisible': [('x_member_type', '=', 'employee')]}" />
+                <field name="x_partner_cd" attrs="{'invisible': [('x_member_type', '=', 'employee')]}"/>
                 <field name="x_cost" attrs="{'invisible': [('x_member_type', '=', 'employee')]}" />
+                <field name="x_kinmu_kubun"/>
             </xpath>
 
             <xpath expr="//field[@name='name']" position="after">
@@ -42,7 +43,12 @@
                         <field name="x_kata" />
                     </h1>
             </xpath>
+            <xpath expr="//field[@name='category_ids']" position="attributes">
+                 <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//field[@name='department_id']" position="before">
+                <button name="action_SetNewEmployeeCd" type="object" string="要員採番" class="btn-primary"
+                        attrs="{'invisible': [('x_employee_cd', '!=', 'NEW')]}"/>
                     <field name="x_employee_cd" />
                     <field name="x_member_type" />
             </xpath>
@@ -81,6 +87,7 @@
                     </div>
 
                     <div class="oe_kanban_bottom">
+                        <field name="x_partner_cd"/>
                         <field name="x_partner_id"/>
                     </div>
                 </div>
@@ -88,6 +95,33 @@
         </field>
 
     </record>
+
+    <record id="ss_view_employee_tree" model="ir.ui.view">
+        <field name="name">ss.hr.employee.tree</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="x_employee_cd" />
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="x_member_type" />
+                <field name="x_partner_cd" />
+                <field name="x_partner_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ss_view_employee_filter" model="ir.ui.view">
+        <field name="name">ss.hr.employee.search</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_coach']" position="attributes">
+                 <attribute name="invisible">1</attribute>
+            </xpath>
+         </field>
+     </record>
 
     <record id="ss_open_view_employee_list" model="ir.actions.act_window">
         <field name="name">Employees</field>
@@ -111,7 +145,7 @@
         <field name="res_model">hr.employee</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('x_member_type', '=', 'bp')]</field>
+        <field name="domain">[('x_member_type', '!=', 'employee')]</field>
     </record>
 
 </odoo>

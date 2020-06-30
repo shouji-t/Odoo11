@@ -2,12 +2,12 @@
 <odoo>
     <data>
         <report
-            id="action_report_ss_order"
-            model="ss.order"
-            string="発注書"
+            id="action_report_ss_pj_order"
+            model="ss.pj.order"
+            string="請求書"
             report_type="qweb-pdf"
-            name="msd_ssm.report_ss_order"
-            file="msd_ssm.report_ss_order"
+            name="msd_ssm.report_ss_pj_order"
+            file="msd_ssm.report_ss_pj_order"
         />
     </data>
 </odoo>
