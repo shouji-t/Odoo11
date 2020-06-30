@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- PJ Kanban View  -->
+        <record model="ir.ui.view" id="view_ss_order_kanban">
+            <field name="name">ss.order.kanban</field>
+            <field name="model">ss.order</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="pj_member_id"/>
+                    <field name="pj_member_cd"/>
+                    <field name="pj_cd"/>
+                    <field name="pj_name"/>
+                    <field name="pj_bu_cd"/>
+                    <field name="pj_partner_c_cd"/>
+                    <field name="pj_partner_c_id"/>
+                    <field name="pj_partner_s_cd"/>
+                    <field name="pj_partner_s_id"/>
+                    <field name="pj_o_amount"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb16">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <span>
+                                            <strong>
+                                                <t t-esc="record.pj_member_cd.value"/>
+                                                <t t-esc="record.pj_member_id.value"/>
+                                            </strong>
+                                        </span>
+                                    </div>
+                                    <strong>
+                                        <field name="pj_o_amount"/>
+                                    </strong>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div>
+                                        <field name="pj_o_member_orderdatefrom"/>
+                                        <field name="pj_o_member_orderdateto"/>
+                                        <field name="pj_o_member_orderamount"/>
+                                    </div>
+                                    <div>
+                                        <field name="pj_cd"/>
+                                        <field name="pj_name"/>
+                                    </div>
+                                    <div>
+                                        <field name="pj_partner_c_cd"/>
+                                        <field name="pj_partner_c_id"/>
+                                    </div>
+                                    <div>
+                                        <field name="pj_partner_s_cd"/>
+                                        <field name="pj_partner_s_id"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left text-muted">
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Tree view -->
+        <record id="view_ss_order_tree" model="ir.ui.view">
+            <field name="name">ss.order.tree</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="ss_order">
+                    <field name="pj_member_cd"/>
+                    <field name="pj_member_id"/>
+                    <field name="pj_cd"/>
+                    <field name="pj_name"/>
+                    <field name="pj_bu_cd"/>
+                    <field name="pj_partner_c_cd"/>
+                    <field name="pj_partner_c_id"/>
+                    <field name="pj_partner_s_cd"/>
+                    <field name="pj_partner_s_id"/>
+                    <field name="pj_o_member_orderdatefrom"/>
+                    <field name="pj_o_member_orderdateto"/>
+                    <field name="pj_o_member_orderamount"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_ss_order_form" model="ir.ui.view">
+            <field name="name">ss.order.form</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="ss_order">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="hr.group_hr_user"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <H2>
+                            <group name="Pj_member" string="要員PJ登録" col="4">
+                                <field name="pj_member_id"/>
+                                <field name="id" readonly="1" />
+                                <field name="pj_member_cd" readonly="1"/>
+                                <field name="pj_member_type"/>
+                                <field name="pj_id" options="{'no_create': True}"/>
+                                <field name="pj_name"/>
+                            </group>
+                        </H2>
+                        <group col="4">
+                            <field name="pj_bu_name"/>
+                            <field name="pj_bu_cd"/>
+                            <field name="pj_partner_c_id"/>
+                            <field name="pj_partner_c_cd"/>
+                            <field name="pj_partner_s_id"/>
+                            <field name="pj_partner_s_cd"/>
+                            <field name="pj_user_id"/>
+                        </group>
+                        <group cal="2" style="color:red;">
+                            <field name="pj_member_note_flag" attrs="{'invisible': [('pj_member_note_flag', '=', False)]}"/>
+                            <field name="pj_member_remarks_flag" attrs="{'invisible': [('pj_member_remarks_flag', '=', False)]}"/>
+                        </group>
+                        <notebook>
+                            <page string="PJ条件(顧客)">
+                                <group name="pjorder" string="受注" col="4">
+                                    <field name="pj_o_member_orderdatefrom"/>
+                                    <field name="pj_o_member_orderamount"/>
+                                    <field name="pj_o_member_orderdateto"/>
+                                    <field name="pj_o_member_orderno"/>
+                                    <field name="pj_o_member_orderdateto_forecase"/>
+                                    <field name="pj_o_member_orderisprogress"/>
+                                    <field name="pj_o_member_orderdateaccpt" attrs="{'invisible': [('pj_o_member_orderisprogress', '=', False)]}"/>
+                                </group>
+                                <group name="pj" string="PJ管理情報(受注)" col="4">
+                                    <field name="pj_o_payofftype"/>
+                                    <field name="pj_o_price_type"/>
+                                </group>
+                                <group name="pj_o_info" col="2">
+                                    <field name="pj_o_manhour_contract" style="width:35%%"/>
+                                    <field name="pj_o_price_unit" style="width:35%%"/>
+                                    <field name="pj_o_normal_dutyhours" style="width:35%%" attrs="{'invisible': [('pj_o_price_type', '=', 'month')]}"/>
+                                    <field name="pj_o_normal_hourlywage" style="width:35%%" attrs="{'invisible': [('pj_o_price_type', '=', 'month')]}"/>
+                                    <field name="pj_o_price_purchase" style="width:35%%" attrs="{'invisible': [('pj_member_type', '=', 'employee')]}"/>
+                                    <field name="pj_o_duty_lowerlimit" style="width:35%%" attrs="{'invisible': [('pj_o_price_type', '=', 'hour')]}"/>
+                                    <field name="pj_o_duty_upperlimit" style="width:35%%" attrs="{'invisible': [('pj_o_price_type', '=', 'hour')]}"/>
+                                </group>
+                                <group name="pj_o_info2" col="2">
+                                    <field name="pj_o_price_lowerlimit" style="width:35%%" attrs="{'invisible': [('pj_o_price_type', '=', 'hour')]}"/>
+                                    <!--<field name="pj_o_price_lowerlimit_ref" attrs="{'invisible': [('pj_o_price_type', '=', 'hour')]}"/>-->
+                                    <field name="pj_o_price_upperlimit" style="width:35%%" attrs="{'invisible': [('pj_o_price_type', '=', 'hour')]}"/>
+                                    <!--<field name="pj_o_price_upperlimit_ref"  attrs="{'invisible': [('pj_o_price_type', '=', 'hour')]}"/>-->
+                                </group>
+                                <!--<button name="action_CopyPriceFromRef_o" type="object" string="参考単価セット" class="btn-primary"/>-->
+                                <group>
+                                    <group name="pj_o_account" string="PJ売上">
+                                        <field name="pj_o_amount"/>
+                                        <field name="pj_o_cost" attrs="{'invisible': [('pj_member_type', '=', 'employee')]}"/>
+                                    </group>
+                                    <group name="pj_o_profit" string="PJ粗利">
+                                        <field name="pj_o_profit" readonly="1" attrs="{'invisible': [('pj_member_type', '=', 'employee')]}"/>
+                                        <field name="pj_o_profitrate" readonly="1" attrs="{'invisible': [('pj_member_type', '=', 'employee')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="PJ条件(外注)" attrs="{'invisible': [('pj_member_type', '=', 'employee')]}">
+                                <button name="action_CopyFromOrder" type="object" string="受注条件⇒発注へCopy" class="btn-primary"/>
+                                <group name="pjpurchase" string="発注" col="4">
+                                    <field name="pj_p_member_orderdatefrom"/>
+                                    <field name="pj_p_member_orderamount"/>
+                                    <field name="pj_p_member_orderdateto"/>
+                                    <field name="pj_p_member_orderno"/>
+                                    <field name="pj_p_member_orderdateto_forecase"/>
+                                </group>
+                                <group name="pj" string="PJ管理情報(発注)" col="4">
+                                    <field name="pj_p_payofftype"/>
+                                    <field name="pj_p_price_type"/>
+                                </group>
+                                <group name="pj_p_info" col="2">
+                                    <field name="pj_p_manhour_contract" style="width:35%%"/>
+                                    <field name="pj_p_price_unit" style="width:35%%"/>
+                                    <field name="pj_p_normal_dutyhours" style="width:35%%" attrs="{'invisible': [('pj_p_price_type', '=', 'month')]}"/>
+                                    <field name="pj_p_normal_hourlywage" style="width:35%%" attrs="{'invisible': [('pj_p_price_type', '=', 'month')]}"/>
+                                    <!--<field name="pj_p_price_purchase" style="width:35%%" attrs="{'invisible': [('pj_member_type', '=', 'employee')]}"/>-->
+                                    <field name="pj_p_duty_lowerlimit" style="width:35%%" attrs="{'invisible': [('pj_p_price_type', '=', 'hour')]}"/>
+                                    <field name="pj_p_duty_upperlimit" style="width:35%%" attrs="{'invisible': [('pj_p_price_type', '=', 'hour')]}"/>
+                                </group>
+                                <group name="pj_p_info2" col="2">
+                                    <field name="pj_p_price_lowerlimit" style="width:35%%" attrs="{'invisible': [('pj_p_price_type', '=', 'hour')]}"/>
+                                    <!--<field name="pj_p_price_lowerlimit_ref" attrs="{'invisible': [('pj_p_price_type', '=', 'hour')]}"/>-->
+                                    <field name="pj_p_price_upperlimit" style="width:35%%" attrs="{'invisible': [('pj_p_price_type', '=', 'hour')]}"/>
+                                    <!--<field name="pj_p_price_upperlimit_ref"  attrs="{'invisible': [('pj_p_price_type', '=', 'hour')]}"/>-->
+                                </group>
+                                <!--<button name="action_CopyPriceFromRef_p" type="object" string="参考単価セット" class="btn-primary"/>-->
+                                <group name="pj_p_account" string="PJ発注">
+                                    <label for="pj_p_amount" string = "発注"/>
+                                    <field name="pj_p_amount" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="変更履歴" name="note">
+                                <field name="pj_member_note" placeholder=""/>
+                            </page>
+                            <page string="備考" name="remarks">
+                                <field name="pj_member_remarks" placeholder=""/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_ss_order_search" model="ir.ui.view">
+            <field name="name">ss.order.search</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="要員">
+                    <filter domain="[('pj_member_type','=','employee')]" string="社員"/>
+                    <filter domain="[('pj_member_type','=','bp')]" string="BP"/>
+                    <filter domain="[('pj_member_type','=','personal')]" string="個人"/>
+                    <separator/>
+                    <filter domain="[('create_date','>=',context_today().strftime('%Y-%m-01'))]" string="今月新規"/>
+                    <filter domain="[('create_date','>=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01'))]" string="前月新規"/>
+                    <separator/>
+                    <filter domain="[('active','=',False)]" string="アカーブ済"/>
+                    <field name="pj_member_id" />
+                    <field name="pj_member_cd" />
+                    <field name="pj_name" />
+                    <field name="pj_cd" />
+                    <field name="pj_bu_cd" />
+                    <field name="pj_partner_c_id" />
+                    <field name="pj_partner_c_cd" />
+                    <field name="pj_partner_s_cd" />
+                    <separator/>
+                    <field name="pj_o_price_type" />
+                    <field name="pj_o_payofftype" />
+                    <group expand="0" string="Group By...">
+                        <filter string="顧客" domain="[]" context="{'group_by':'pj_partner_c_id'}" />
+                        <filter string="外注" domain="[]" context="{'group_by':'pj_partner_s_cd'}" />
+                        <filter string="部門" domain="[]" context="{'group_by':'pj_bu_cd'}" />
+                        <filter string="PJ" domain="[]" context="{'group_by':'pj_cd'}" />
+                        <filter string="要員区分" domain="[]" context="{'group_by':'pj_member_type'}" />
+                        <filter string="PJ担当者" domain="[]" context="{'group_by':'pj_user_id'}" />
+                        <separator/>
+                        <filter string="PJ単価区分" domain="[]" context="{'group_by':'pj_o_price_type'}" />
+                        <filter string="PJ精算条件" domain="[]" context="{'group_by':'pj_o_payofftype'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- graph View -->
+        <record id="view_ss_order_graph" model="ir.ui.view">
+            <field name="name">ss.order.graph</field>
+            <field name="model">ss.order</field>
+            <field name="arch" type="xml">
+                <graph string="部門_要員">
+                    <field name="pj_bu_name"/>
+                    <field name="pj_o_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <!-- pivot View -->
+        <!--<record id="view_ss_order_pivot" model="ir.ui.view">-->
+        <!--<field name="name">sale.order.pivot</field>-->
+        <!--<field name="model">sale.order</field>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<pivot string="PJ">-->
+        <!--<field name="pj_bu_cd" type="row"/>-->
+        <!--<field name="pj_o_amount_total" type="measure"/>-->
+        <!--</pivot>-->
+        <!--</field>-->
+        <!--</record>-->
+        <record model="ir.actions.act_window" id="act_ss_order_view">
+            <field name="name">PJ要員</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.order</field>
+            <field name="view_type">form</field>
+            <field name="limit">100</field>
+            <field name="view_mode">kanban,tree,form,pivot,graph</field>
+            <field name="search_view_id" ref="view_ss_order_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_form">
+            <field name="act_window_id" ref="act_ss_order_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_order_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_tree">
+            <field name="act_window_id" ref="act_ss_order_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_order_tree" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_kanban">
+            <field name="act_window_id" ref="act_ss_order_view"/>
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_ss_order_kanban"/>
+        </record>
+
+
+        <!-- Actions act window PJ要員_契約A-->
+        <record id="view_ss_order_tree_a" model="ir.ui.view">
+            <field name="name">ss.order.tree</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="ss_order_a">
+                    <field name="pj_member_cd"/>
+                    <field name="pj_member_id"/>
+                    <field name="pj_cd"/>
+                    <field name="pj_name"/>
+                    <field name="pj_bu_cd"/>
+                    <field name="pj_partner_c_cd"/>
+                    <field name="pj_partner_c_id"/>
+                    <field name="pj_o_member_orderdatefrom"/>
+                    <field name="pj_o_member_orderdateto"/>
+                    <field name="pj_o_member_orderamount"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_ss_order_form_a" model="ir.ui.view">
+            <field name="name">ss.order.form</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="ss_order">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="hr.group_hr_user"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group name="Pj_member" string="" col="4">
+                            <field name="pj_member_id" readonly="1"/>
+                            <field name="pj_member_type" readonly="1"/>
+                            <field name="pj_member_cd" readonly="1"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_id" readonly="1"/>
+                            <field name="pj_name"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_bu_cd"/>
+                            <field name="pj_bu_name"/>
+                            <field name="pj_partner_c_cd"/>
+                            <field name="pj_partner_c_id"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_o_member_orderdatefrom"/>
+                            <field name="pj_o_member_orderamount"/>
+                            <field name="pj_o_member_orderdateto"/>
+                            <field name="pj_o_member_orderno"/>
+                            <field name="pj_o_member_orderdateto_forecase"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_o_member_orderisprogress"/>
+                            <field name="pj_o_member_orderdateaccpt" attrs="{'invisible': [('pj_o_member_orderisprogress', '=', False)]}"/>
+                        </group>
+                        <group col="2">
+                            <field name="pj_member_note" placeholder=""/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions act window PJ要員_契約A-->
+        <record model="ir.actions.act_window" id="act_ss_order_view_a">
+            <field name="name">PJ要員_契約A</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_order_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_form_a">
+            <field name="act_window_id" ref="act_ss_order_view_a" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_order_form_a" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_tree_a">
+            <field name="act_window_id" ref="act_ss_order_view_a" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_order_tree_a" />
+        </record>
+
+        <!-- Actions act window PJ要員_契約Z-->
+        <record id="view_ss_order_tree_z" model="ir.ui.view">
+            <field name="name">ss.order.tree</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="ss_order">
+                    <field name="pj_member_cd"/>
+                    <field name="pj_member_id"/>
+                    <field name="pj_cd"/>
+                    <field name="pj_name"/>
+                    <field name="pj_bu_cd"/>
+                    <field name="pj_partner_s_cd"/>
+                    <field name="pj_partner_s_id"/>
+                    <field name="pj_p_member_orderdatefrom"/>
+                    <field name="pj_p_member_orderdateto"/>
+                    <field name="pj_p_member_orderamount"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_ss_order_form_z" model="ir.ui.view">
+            <field name="name">ss.order.form</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="ss_order">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="hr.group_hr_user"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group name="Pj_member" string="" col="4">
+                            <field name="pj_member_id" readonly="1"/>
+                            <field name="pj_member_type" readonly="1"/>
+                            <field name="pj_member_cd" readonly="1"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_id" readonly="1"/>
+                            <field name="pj_name"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_bu_cd"/>
+                            <field name="pj_bu_name"/>
+                            <field name="pj_partner_s_cd"/>
+                            <field name="pj_partner_s_id"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_p_member_orderdatefrom"/>
+                            <field name="pj_p_member_orderamount"/>
+                            <field name="pj_p_member_orderdateto"/>
+                            <field name="pj_p_member_orderno"/>
+                            <field name="pj_p_member_orderdateto_forecase"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_p_member_orderisprogress"/>
+                            <field name="pj_p_member_orderdateaccpt" attrs="{'invisible': [('pj_p_member_orderisprogress', '=', False)]}"/>
+                        </group>
+                        <group col="2">
+                            <field name="pj_member_note" placeholder=""/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions act window PJ要員_契約Z-->
+        <record model="ir.actions.act_window" id="act_ss_order_view_z">
+            <field name="name">PJ要員_契約Z</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_order_search" />
+            <field name="domain">[('pj_partner_s_cd','>','')]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_form_z">
+            <field name="act_window_id" ref="act_ss_order_view_z" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_order_form_z" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_order_view_tree_z">
+            <field name="act_window_id" ref="act_ss_order_view_z" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_order_tree_z" />
+        </record>
+
+
+        <!-- <act_window id="act_create_ss_order_order_view" name="PJ検収作成" res_model="ss.order.order" src_model="ss.order"/> -->
+
+        <!--<act_window-->
+        <!--id="account.action_all_partner_invoices"-->
+        <!--name="All Invoices"-->
+        <!--res_model="account.invoice"-->
+        <!--domain="[('partner_id', 'child_of', active_id)]"-->
+        <!--src_model="res.partner"/>-->
+
+        <!--<act_window-->
+        <!--id="act_account_acount_move_line_open_unreconciled"-->
+        <!--name="Unreconciled Entries"-->
+        <!--res_model="account.move.line"-->
+        <!--context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"-->
+        <!--src_model="account.account"/>-->
+
+        <!--<act_window-->
+        <!--id="action_move_line_select"-->
+        <!--name="Journal Items"-->
+        <!--context="{'search_default_account_id': [active_id]}"-->
+        <!--res_model="account.move.line"-->
+        <!--src_model="account.account"/>-->
+
+        <!--<act_window-->
+        <!--id="action_move_select"-->
+        <!--name="Journal Entries"-->
+        <!--context="{'search_default_dummy_account_id': [active_id]}"-->
+        <!--res_model="account.move"/>-->
+
+        <!--<act_window-->
+        <!--id="action_move_line_select_by_type"-->
+        <!--name="Journal Items"-->
+        <!--context="{'search_default_user_type_id': [active_id]}"-->
+        <!--res_model="account.move.line"-->
+        <!--src_model="account.account.type"/>-->
+
+        <!--<act_window-->
+        <!--id="action_move_line_select_by_partner"-->
+        <!--name="Journal Items"-->
+        <!--context="{'search_default_partner_id': [active_id]}"-->
+        <!--res_model="account.move.line"-->
+        <!--src_model="res.partner"/>-->
+    </data>
+</odoo>

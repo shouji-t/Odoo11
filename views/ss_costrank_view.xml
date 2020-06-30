@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_ss_costrank_tree" model="ir.ui.view">
+            <field name="name">ss.costrank.tree</field>
+            <field name="model">ss.costrank</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="cost">
+                    <field name="rank_cd" />
+                    <field name="rank_cost" />
+                    <field name="rank_note" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_ss_costrank_form" model="ir.ui.view">
+            <field name="name">ss.costrank.form</field>
+            <field name="model">ss.costrank</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="costrank">
+                    <sheet>
+                        <H1>
+                            原価ランク
+                        </H1>
+                        <group col="3">
+                            <group col="2">
+                                <field name="rank_cd" />
+                                <field name="rank_cost" />
+                                <field name="rank_note" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_ss_costrank_search" model="ir.ui.view">
+            <field name="name">ss.costrank.search</field>
+            <field name="model">ss.costrank</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="cost">
+                    <field name="rank_cd" />
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_ss_costrank_view">
+            <field name="name">原価ランク</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.costrank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_costrank_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_costrank_view_form">
+            <field name="act_window_id" ref="act_ss_costrank_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_costrank_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_costrank_view_tree">
+            <field name="act_window_id" ref="act_ss_costrank_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_costrank_tree" />
+        </record>
+    </data>
+
+</odoo>

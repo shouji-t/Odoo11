@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_ss_sales_report_tree" model="ir.ui.view">
+        <field name="name">ss.sales.report.tree</field>
+        <field name="model">ss.sales.report</field>
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <tree string="ss_sales">
+                <field name="pj_account_date"/>
+                <field name="pj_partner_c_cd"/>
+                <field name="pj_partner_c_id"/>
+                <field name="pj_cd"/>
+                <field name="pj_name"/>
+                <field name="pj_bu_cd"/>
+                <field name="pj_member_cd"/>
+                <field name="pj_member_id"/>
+                <field name="pj_partner_s_cd"/>
+                <field name="pj_partner_s_id"/>
+                <field name="pj_o_manhour"/>
+                <field name="pj_o_duty_hours"/>
+                <field name="pj_o_payoffhour"/>
+                <field name="pj_o_excess_deduct"/>
+                <field name="pj_o_carfare"/>
+                <field name="pj_o_amount_subtotal"/>
+                <field name="pj_o_amount_inprogress"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ss_sales_report_pivot" model="ir.ui.view">
+         <field name="name">ss.sales.report.pivot</field>
+         <field name="model">ss.sales.report</field>
+         <field name="arch" type="xml">
+             <pivot string="実績分析" disable_linking="True">
+                 <!--<field name="pj_partner_id" type="col"/>-->
+                 <field name="pj_bu_cd" type="row"/>
+                 <field name="pj_member_id" type="row"/>
+                 <!--<field name="pj_account_date" type="col"/>-->
+                 <field name="pj_o_manhour" type="measure"/>
+                 <field name="pj_o_excess_deduct" type="measure"/>
+                 <field name="pj_o_subtotal" type="measure"/>
+                 <field name="pj_o_amount_inprogress" type="measure"/>
+                 <field name="pj_o_amount_subtotal" type="measure"/>
+                 <field name="pj_o_profit" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_ss_sales_report_graph" model="ir.ui.view">
+         <field name="name">ss.sales.report.graph</field>
+         <field name="model">ss.sales.report</field>
+         <field name="arch" type="xml">
+             <graph string="実績分析">
+                 <field name="pj_bu_cd" type="row"/>
+                 <field name="pj_o_manhour" type="measure"/>
+                 <field name="pj_o_profit" type="measure"/>
+                 <field name="pj_o_amount_subtotal" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <!-- Custom reports (aka filters) -->
+    <!--<record id="filter_ss_pj_report_sales_funnel" model="ir.filters">-->
+        <!--<field name="name">Sales Funnel</field>-->
+        <!--<field name="model_id">ss.pj.report</field>-->
+        <!--<field name="domain">['&amp;', ('date','&lt;=', time.strftime('%%Y-12-31')), '&amp;', ('date','&gt;=',time.strftime('%%Y-01-01')), ('state','not in',('cancel',))]</field>-->
+        <!--<field name="user_id" eval="False"/>-->
+        <!--<field name="context">{'group_by': ['state'], 'measures': ['price_subtotal']}</field>-->
+    <!--</record>-->
+    <!--<record id="filter_ss_pj_report_salespersons" model="ir.filters">-->
+        <!--<field name="name">By Salespersons</field>-->
+        <!--<field name="model_id">ss.pj.report</field>-->
+        <!--<field name="user_id" eval="False"/>-->
+        <!--<field name="context">{'group_by': ['date:month', 'user_id']}</field>-->
+    <!--</record>-->
+    <!--<record id="filter_ss_pj_report_salesteam" model="ir.filters">-->
+        <!--<field name="name">By Salesteam</field>-->
+        <!--<field name="model_id">ss.pj.report</field>-->
+        <!--<field name="user_id" eval="False"/>-->
+        <!--<field name="context">{'group_by': ['date:month', 'team_id']}</field>-->
+    <!--</record>-->
+    <!--<record id="filter_ss_pj_report_member" model="ir.filters">-->
+        <!--<field name="name">By Product</field>-->
+        <!--<field name="model_id">ss.pj.report</field>-->
+        <!--<field name="user_id" eval="False"/>-->
+        <!--<field name="context">{'group_by': ['date:month', 'pj_member_id']}</field>-->
+    <!--</record>-->
+
+    <record id="view_ss_sales_report_search" model="ir.ui.view">
+        <field name="name">ss.sales.report.search</field>
+        <field name="model">ss.sales.report</field>
+        <field name="arch" type="xml">
+            <search string="実績分析">
+                <!--<field name="pj_account_date"/>-->
+                <!--<filter string="１Q" name="Q1" domain="[('pj_account_date','&gt;=', context_today().strftime('%Y%m')),('pj_account_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>-->
+                <filter string="１Q" name="Q1" domain="[('pj_account_date','&gt;=', '201804'),('pj_account_date','&lt;=','201806')]"/>
+                <filter string="２Q" name="Q2" domain="[('pj_account_date','&gt;=', '201807'),('pj_account_date','&lt;=','201809')]"/>
+                <filter string="３Q" name="Q3" domain="[('pj_account_date','&gt;=', '201810'),('pj_account_date','&lt;=','201812')]"/>
+                <filter string="４Q" name="Q4" domain="[('pj_account_date','&gt;=', '201901'),('pj_account_date','&lt;=','201903')]"/>
+                <!--<filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>-->
+                <!--<filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>-->
+                <separator/>
+                <field name="pj_bu_cd"/>
+                <field name="pj_partner_c_cd"/>
+                <field name="pj_partner_s_cd"/>
+                <separator/>
+                <field name="pj_cd"/>
+                <field name="pj_member_cd"/>
+                <field name="pj_member_id"/>
+                <field name="pj_account_date"/>
+                <group expand="0" string="Group By...">
+                    <filter string="BUCD"   context="{'group_by':'pj_bu_cd'}"/>
+                    <filter string="顧客CD" context="{'group_by':'pj_partner_c_cd'}"/>
+                    <filter string="BPCD"   context="{'group_by':'pj_partner_s_cd'}"/>
+                    <filter string="要員CD" context="{'group_by':'pj_member_cd'}"/>
+                    <filter string="PJCD"   context="{'group_by':'pj_cd'}"/>
+                </group>
+                <separator/>
+                <group expand="2" string="Group By..2">
+                    <!--<filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>-->
+                    <filter string="要員区分" domain="[]" context="{'group_by':'pj_member_type'}" />
+                    <filter name="r_month" string="経理年月" context="{'group_by':'pj_account_date'}"/>
+                    <!--<filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>-->
+                </group>
+                <separator/>
+                <group expand="3" string="Group By..3">
+                    <filter string="BU名"   context="{'group_by':'pj_bu_name'}"/>
+                    <filter string="顧客名" context="{'group_by':'pj_partner_c_id'}"/>
+                    <filter string="BP名"   context="{'group_by':'pj_partner_s_id'}"/>
+                    <filter string="要員名" context="{'group_by':'pj_member_id'}"/>
+                    <filter string="PJ名"   context="{'group_by':'pj_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ss_sales_report_all" model="ir.actions.act_window">
+        <field name="name">Sales Analysis</field>
+        <field name="res_model">ss.sales.report</field>
+        <field name="view_type">form</field>
+        <field name="limit">100</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="search_view_id" ref="view_ss_sales_report_search"/>
+        <field name="context">{'search_default_pj_account_date':(context_today()-relativedelta(months=1)).strftime('%Y%m')}</field>
+        <!--<field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>-->
+    </record>
+</odoo>

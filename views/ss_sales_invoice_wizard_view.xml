@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ss_sales_invoice_wizard" model="ir.ui.view">
+            <field name="name">ss.sales.invoice.wizard</field>
+            <field name="model">ss.sales.invoice.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <!--<group name="pj_invoice">-->
+                            <!--&lt;!&ndash;<label for="pj_account_date" class="oe_read_only" />&ndash;&gt;-->
+                            <!--&lt;!&ndash;<field name="pj_account_date" style="width: 60%%" class="oe_read_only" nolabel="1"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<label for="pj_long_date" class="oe_edit_only" />&ndash;&gt;-->
+                            <!--&lt;!&ndash;<field name="pj_long_date" style="width: 60%%" class="oe_edit_only" nolabel="1"/>&ndash;&gt;-->
+                        <!--</group>-->
+                        <group>
+                            <field name='pj_sales_ids' mode="tree">
+                                <tree string="PJ 要員実績 Tree">
+                                    <field name="pj_member_id"/>
+                                    <field name="pj_o_manhour"/>
+                                    <field name="pj_o_duty_hours"/>
+                                    <field name="pj_o_payoffhour"/>
+                                    <field name="pj_o_excess_deduct"/>
+                                    <field name="pj_o_carfare"/>
+                                    <field name="pj_o_amount_subtotal"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                    </sheet>
+                    <footer>
+                        <button type="object" name="do_create" string="発行" />
+                        <button special="cancel" string="キャンセル"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--<record id="action_ss_sales_invoice_wizard" model="ir.actions.act_window">-->
+            <!--<field name="name">請求書発行</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">ss.sales.invoice.wizard</field>-->
+            <!--<field name="view_type">tree</field>-->
+            <!--<field name="view_mode">form</field>-->
+            <!--&lt;!&ndash;<field name="view_id" ref="action_ss_sales_invoice_wizard"/>&ndash;&gt;-->
+            <!--<field name="target">new</field>-->
+        <!--</record>-->
+
+        <act_window id="action_ss_sales_invoice_wizard" name="請求書発行" src_model="ss.sales.invoicea" res_model="ss.sales.invoice.wizard"  key2="client_action_multi" view_mode="form" target="new" limit="50" />
+
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ss_budget_pivot" model="ir.ui.view">
+         <field name="name">ss.budget.report.pivot</field>
+         <field name="model">ss.budget.report</field>
+         <field name="arch" type="xml">
+             <pivot string="Sales Analysis" disable_linking="True">
+                 <field name="department_cd" type="row"/>
+                 <field name="budget_earnings" type="measure"/>
+                 <field name="budget_costs" type="measure"/>
+                 <field name="budget_charges" type="measure"/>
+                 <field name="budget_profits" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_ss_budget_graph" model="ir.ui.view">
+         <field name="name">ss.budget.report.graph</field>
+         <field name="model">ss.budget.report</field>
+         <field name="arch" type="xml">
+             <graph string="Sales Analysis">
+                 <field name="department_cd" type="row"/>
+                 <field name="budget_earnings" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_ss_budget_search" model="ir.ui.view">
+        <field name="name">ss.budget.report.search</field>
+        <field name="model">ss.budget.report</field>
+        <field name="arch" type="xml">
+            <search string="Sales Analysis">
+                <field name="department_cd"/>
+                <field name="budget_year"/>
+                <group expand="0" string="Group By...">
+                    <filter string="BUCD"   context="{'group_by':'department_cd'}"/>
+                    <filter string="予算年度"   context="{'group_by':'budget_year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ss_budget_report" model="ir.actions.act_window">
+        <field name="name">Budget Analysis</field>
+        <field name="res_model">ss.budget.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="search_view_id" ref="view_ss_budget_search"/>
+    </record>
+</odoo>

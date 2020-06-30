@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_ss_sales_invoicea_tree" model="ir.ui.view">
+        <field name="name">ss.sales.invoicea.tree</field>
+        <field name="model">ss.sales.invoicea</field>
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <tree string="ss_sales" create="0" default_order="pj_cd">
+                <field name="pj_partner_c_id"/>
+                <field name="pj_partner_c_cd"/>
+                <field name="pj_name"/>
+                <field name="pj_cd"/>
+                <field name="pj_account_date"/>
+                <!--&lt;!&ndash;<field name="pj_bu_cd"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<field name="pj_member_cd"/>&ndash;&gt;-->
+                <field name="pj_member_id"/>
+                <field name="pj_o_manhour"/>
+                <field name="pj_o_duty_hours"/>
+                <field name="pj_o_payoffhour"/>
+                <field name="pj_o_excess_deduct"/>
+                <field name="pj_o_carfare"/>
+                <field name="pj_o_amount_subtotal"/>
+                <!--<field name="pj_o_amount_inprogress"/>-->
+                <!--<field name="pj_sales_order_count"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ss_sales_invoicea_search" model="ir.ui.view">
+        <field name="name">ss.sales.invoicea.search</field>
+        <field name="model">ss.sales.invoicea</field>
+        <field name="arch" type="xml">
+            <search string="PJ請求_A">
+                <field name="pj_account_date"/>
+                <field name="pj_bu_cd"/>
+                <field name="pj_partner_c_cd"/>
+                <field name="pj_partner_s_cd"/>
+                <field name="pj_cd"/>
+                <field name="pj_name"/>
+                <group expand="0" string="Group By...">
+                    <filter string="BUCD"   context="{'group_by':'pj_bu_cd'}"/>
+                    <filter string="顧客CD" context="{'group_by':'pj_partner_c_cd'}"/>
+                    <filter string="BPCD"   context="{'group_by':'pj_partner_s_cd'}"/>
+                    <filter string="要員CD" context="{'group_by':'pj_member_cd'}"/>
+                    <filter string="PJCD"   context="{'group_by':'pj_cd'}"/>
+                </group>
+                <group expand="2" string="Group By..2">
+                    <!--<filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>-->
+                    <filter name="group_pj_cd" string="PJ" domain="[]" context="{'group_by':'pj_cd'}" />
+                    <!--<filter string="要員区分" domain="[]" context="{'group_by':'pj_member_type'}" />-->
+                    <filter name="r_month" string="経理年月" context="{'group_by':'pj_account_date'}"/>
+                    <!--<filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>-->
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ss_sales_invoicea_view" model="ir.actions.act_window">
+        <field name="name">PJ請求書_A</field>
+        <field name="res_model">ss.sales.invoicea</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="limit">100</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="search_view_id" ref="view_ss_sales_invoicea_search"/>
+        <field name="domain">[('pj_process','=','done')]</field>
+        <field name="context">{'search_default_group_pj_cd':1, 'search_default_pj_account_date':(context_today()-relativedelta(months=1)).strftime('%Y%m')}</field>
+    </record>
+
+
+</odoo>

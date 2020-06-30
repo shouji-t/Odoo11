@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_ss_cost_tree" model="ir.ui.view">
+            <field name="name">ss.cost.tree</field>
+            <field name="model">ss.cost</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="cost">
+                    <field name="employee_id" />
+                    <field name="employee_cd" readonly="1"/>
+                    <field name="employee_cost" />
+                    <field name="employee_rank" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_ss_cost_form" model="ir.ui.view">
+            <field name="name">ss.cost.form</field>
+            <field name="model">ss.cost</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="cost">
+                    <sheet>
+                        <H1>
+                            原価登録
+                        </H1>
+                        <group col="3">
+                            <group col="2">
+                            <field name="pj_account_date" />
+                            <field name="employee_id" />
+                            <field name="employee_cd" />
+                            <field name="employee_cost" />
+                            <field name="employee_rank" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_ss_cost_search" model="ir.ui.view">
+            <field name="name">ss.cost.search</field>
+            <field name="model">ss.cost</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="cost">
+                    <field name="employee_cd" />
+                    <field name="employee_id" />
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_ss_cost_view">
+            <field name="name">cost</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ss.cost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ss_cost_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_cost_view_form">
+            <field name="act_window_id" ref="act_ss_cost_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ss_cost_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_ss_cost_view_tree">
+            <field name="act_window_id" ref="act_ss_cost_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ss_cost_tree" />
+        </record>
+
+        <record id="view_ss_cost_form2" model="ir.ui.view">
+            <field name="name">ss.cost.form</field>
+            <field name="model">ss.cost</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="cost">
+                    <sheet>
+                        <group col="2">
+                            <field name="employee_id" />
+                            <field name="employee_cd" />
+                            <field name="employee_cost" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ss_sales_wizard" model="ir.ui.view">
+            <field name="name">ss.sales.wizard</field>
+            <field name="model">ss.sales.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group name="Pj_date">
+                            <label for="pj_account_date" class="oe_read_only" />
+                            <field name="pj_account_date" style="width: 60%%" class="oe_read_only" nolabel="1"/>
+                            <label for="pj_long_date" class="oe_edit_only" />
+                            <field name="pj_long_date" style="width: 60%%" class="oe_edit_only" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field name='pj_order_ids' mode="tree">
+                                <tree string="PJ 要員 Tree">
+                                    <field name="pj_member_cd"/>
+                                    <field name="pj_member_id"/>
+                                    <field name="pj_cd"/>
+                                    <field name="pj_name"/>
+                                    <field name="pj_o_member_orderdatefrom"/>
+                                    <field name="pj_o_member_orderdateto"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                    </sheet>
+                    <footer>
+                        <button type="object" name="do_create" string="決定" />
+                        <button special="cancel" string="キャンセル"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--<act_window id="action_ss_sales_wizard_multi" name="実績作成" src_model="ss.order" res_model="ss.sales.wizard" view_mode="form" target="new" multi="True" />-->
+        <act_window id="action_ss_sales_wizard" name="実績作成" src_model="ss.order" res_model="ss.sales.wizard" view_mode="form" target="new" limit="1000" />
+
+    </data>
+</odoo>

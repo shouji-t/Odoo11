@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_ss_member_expiring_tree" model="ir.ui.view">
+        <field name="name">ss.member_expiring.tree</field>
+        <field name="model">ss.order</field>
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <tree string="ss_member_expiring">
+                <field name="pj_member_cd"/>
+                <field name="pj_member_id"/>
+                <field name="pj_cd"/>
+                <field name="pj_name"/>
+                <field name="pj_bu_cd"/>
+                <field name="pj_o_member_orderdatefrom"/>
+                <field name="pj_o_member_orderdateto"/>
+                <field name="pj_o_member_orderdateto_forecase"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- PJ Kanban View  -->
+    <record model="ir.ui.view" id="view_ss_member_expiring_kanban">
+        <field name="name">ss.member_expiring.kanban</field>
+        <field name="model">ss.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="pj_member_id"/>
+                <field name="pj_member_cd"/>
+                <field name="pj_cd"/>
+                <field name="pj_name"/>
+                <field name="pj_bu_cd"/>
+                <field name="pj_o_member_orderdatefrom"/>
+                <field name="pj_o_member_orderdateto"/>
+                <field name="pj_o_member_orderdateto_forecase"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings mt4">
+                                    <span>
+                                        <strong>
+                                            <t t-esc="record.pj_member_id.value"/>
+                                            <t t-esc="record.pj_member_cd.value"/>
+                                        </strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <strong>
+                                        受注期間終了見込み:
+                                        <field name="pj_o_member_orderdateto_forecast"/>
+                                    </strong>
+                                </div>
+                                <div>
+                                    <field name="pj_name"/>
+                                </div>
+                                <div>
+                                    <field name="pj_partner_c_cd"/>
+                                    <field name="pj_partner_c_id"/>
+                                </div>
+                                <div>
+                                    <field name="pj_partner_s_cd"/>
+                                    <field name="pj_partner_s_id"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left text-muted">
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_ss_member_expiring_search" model="ir.ui.view">
+        <field name="name">ss.member_expiring.search</field>
+        <field name="model">ss.order</field>
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <search string="要員">
+                <filter domain="[('pj_member_type','=','employee')]" string="社員"/>
+                <filter domain="[('pj_member_type','=','bp')]" string="BP"/>
+                <filter domain="[('pj_member_type','=','personal')]" string="個人"/>
+                <separator/>
+                <filter domain="[('active','=',False)]" string="アカーブ済"/>
+                <field name="pj_member_id" />
+                <field name="pj_member_cd" />
+                <field name="pj_name" />
+                <field name="pj_cd" />
+                <field name="pj_bu_cd" />
+                <field name="pj_partner_c_id" />
+                <field name="pj_partner_c_cd" />
+                <field name="pj_partner_s_cd" />
+                <separator/>
+                <field name="pj_o_price_type" />
+                <field name="pj_o_payofftype" />
+                <group expand="0" string="Group By...">
+                    <filter string="顧客" domain="[]" context="{'group_by':'pj_partner_c_id'}" />
+                    <filter string="外注" domain="[]" context="{'group_by':'pj_partner_s_cd'}" />
+                    <filter string="BU" domain="[]" context="{'group_by':'pj_bu_cd'}" />
+                    <filter string="PJ" domain="[]" context="{'group_by':'pj_cd'}" />
+                    <filter string="要員区分" domain="[]" context="{'group_by':'pj_member_type'}" />
+                    <separator/>
+                    <filter name="group_pj_o_member_orderdateto" string="月別_受注_期間TO(確定)" domain="[]" context="{'group_by':'pj_o_member_orderdateto'}" />
+                    <filter name="group_pj_o_member_orderdateto_forecase" string="月別_受注_期間TO(見込)" domain="[]" context="{'group_by':'pj_o_member_orderdateto_forecase'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ss_member_expiring_form" model="ir.ui.view">
+            <field name="name">ss.member_expiring.form</field>
+            <field name="model">ss.order</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="終了見込み要員">
+                    <sheet>
+                        <group name="Pj_member" string="" col="4">
+                            <field name="pj_member_id" readonly="1"/>
+                            <field name="pj_member_type" readonly="1"/>
+                            <field name="pj_member_cd" readonly="1"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_id" readonly="1"/>
+                            <field name="pj_name"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_bu_cd"/>
+                            <field name="pj_bu_name"/>
+                            <field name="pj_partner_c_cd"/>
+                            <field name="pj_partner_c_id"/>
+                        </group>
+                        <group col="4">
+                            <field name="pj_o_member_orderdatefrom" readonly="1"/>
+                            <field name="pj_o_member_orderamount" readonly="1"/>
+                            <field name="pj_o_member_orderdateto" readonly="1"/>
+                            <field name="pj_o_member_orderno" readonly="1"/>
+                            <field name="pj_o_member_orderdateto_forecase" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    <record id="ss_open_member_expiring_list" model="ir.actions.act_window">
+        <field name="name">終了見込み要員</field>
+        <field name="res_model">ss.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="search_view_id" ref="view_ss_member_expiring_search"/>
+        <field name="domain">['|',("pj_o_member_orderdateto",'>',datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),("pj_o_member_orderdateto_forecase",'>',datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]</field>
+        <field name="context">{'search_default_group_pj_o_member_orderdateto_forecase':1}</field>
+    </record>
+</odoo>

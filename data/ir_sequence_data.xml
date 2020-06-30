@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for ss.pj -->
+        <record id="seq_ss_pj" model="ir.sequence">
+            <field name="name">SsPj</field>
+            <field name="code">ss.pj</field>
+            <field name="padding">206</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

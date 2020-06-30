@@ -1,0 +1,124 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-19 11:17+0000\n"
+"PO-Revision-Date: 2018-02-19 15:53+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.3\n"
+"Last-Translator: \n"
+"Language: jp_JP\n"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:ss.dumy
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_employee_form
+msgid "Contact Information"
+msgstr "連絡先情報"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_employee_form
+msgid "Other Information ..."
+msgstr "その他情報..."
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_employee_form
+msgid "Position"
+msgstr "役職"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_employee_form
+msgid "Department"
+msgstr "BU"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_employee_form
+msgid "Work Information"
+msgstr "職場関連情報"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_employee_form
+msgid "Employees"
+msgstr "要員管理"
+
+#. module: msd_ssm
+#: model:ir.actions.act_window,arch_db:msd_ssm.ss_action_partner_form
+msgid "NewCustomers"
+msgstr "新規取引"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "My Partners"
+msgstr "自分の取引先"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Persons"
+msgstr "個人"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Salesperson"
+msgstr "販売担当者"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Search Partner"
+msgstr "取引先検索"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Customers"
+msgstr "顧客"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Vendors"
+msgstr "仕入先"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Companies"
+msgstr "会社"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_res_partner_filter
+msgid "Tag"
+msgstr "タグ"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_partner_form
+msgid "Contacts & Addresses"
+msgstr "連絡先 & アドレス"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_partner_form
+msgid "Internal Notes"
+msgstr "内部注記"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_partner_form
+msgid "Sales & Purchases"
+msgstr "販売 & 購買"
+
+#. module: msd_ssm
+#: model:ir.ui.view,arch_db:msd_ssm.ss_view_partner_form
+msgid "Sales & Purchases"
+msgstr "販売 & 購買"
+
